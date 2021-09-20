@@ -84,8 +84,8 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
         else if ((b >= a) && (b >= c)) b
         else c
     val mi =
-        if ((a < b) && (a < c)) a
-        else if ((b < a) && (b < c)) b
+        if ((a <= b) && (a <= c)) a
+        else if ((b <= a) && (b <= c)) b
         else c
     val sr =
         if (a != ma && a != mi || a == b || a == c) a
