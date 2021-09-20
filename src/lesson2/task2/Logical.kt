@@ -79,14 +79,27 @@ fun circleInside(
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    val ma = max(max(a, b), max(b, c))
-    val mi = min(min(a, b), min(b, c))
+    val ma =
+        if ((a >= b) && (a >= c)) a
+        else if ((b >= a) && (b >= c)) b
+        else c
+    val mi =
+        if ((a < b) && (a < c)) a
+        else if ((b < a) && (b < c)) b
+        else c
     val sr =
-        if (a != ma && a != mi) a
-        else if (c != ma && c != mi) c
+        if (a != ma && a != mi || a == b || a == c) a
+        else if (c != ma && c != mi || c == a || c == b) c
         else b
-    val maWall = max(r, s)
-    val miWall = min(r, s)
+    val maWall =
+        if (r >= s) r
+        else s
+    val miWall =
+        if (r < s) r
+        else s
+    println(ma)
+    println(mi)
+    println(sr)
     return sr * mi <= maWall * miWall && sr <= maWall && mi <= miWall
 }
 
