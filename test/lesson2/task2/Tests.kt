@@ -28,6 +28,7 @@ class Tests {
         assertTrue(queenThreatens(3, 6, 7, 6))
         assertTrue(queenThreatens(8, 1, 1, 8))
         assertFalse(queenThreatens(7, 6, 5, 7))
+        assertTrue(queenThreatens(3, 1, 2, 2))
     }
 
     @Test
@@ -45,6 +46,7 @@ class Tests {
         assertEquals(29, daysInMonth(2, 1996))
         assertEquals(28, daysInMonth(2, 1900))
         assertEquals(29, daysInMonth(2, 2000))
+        assertEquals(30, daysInMonth(9, 7070100))
     }
 
     @Test

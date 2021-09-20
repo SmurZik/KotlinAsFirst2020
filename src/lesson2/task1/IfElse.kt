@@ -155,11 +155,17 @@ fun rookOrBishopThreatens(
  * Если такой треугольник не существует, вернуть -1.
  */
 fun triangleKind(a: Double, b: Double, c: Double): Int {
-    val ma = max(max(a, b), max(b, c))
-    val mi = min(min(a, b), min(b, c))
+    val ma =
+        if ((a >= b) && (a >= c)) a
+        else if ((b >= a) && (b >= c)) b
+        else c
+    val mi =
+        if ((a <= b) && (a <= c)) a
+        else if ((b <= a) && (b <= c)) b
+        else c
     val sr =
-        if (a != ma && a != mi) a
-        else if (c != ma && c != mi) c
+        if (a != ma && a != mi || a == b || a == c) a
+        else if (c != ma && c != mi || c == a || c == b) c
         else b
     if ((sr * sr + mi * mi > ma * ma) && (sr + mi > ma && sr + ma > mi && ma + mi > sr)) return 0
     else if (sr * sr + mi * mi == ma * ma) return 1
