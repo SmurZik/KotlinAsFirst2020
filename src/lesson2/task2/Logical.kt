@@ -25,8 +25,7 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
 fun isNumberHappy(number: Int): Boolean {
     val firstTwo = ((number / 100) % 10) + (number / 1000)
     val secondTwo = ((number % 100) / 10) + (number % 10)
-    val b = firstTwo == secondTwo
-    return b
+    return firstTwo == secondTwo
 }
 
 /**
@@ -48,13 +47,15 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 fun daysInMonth(month: Int, year: Int): Int {
-    if (month <= 7 && month != 2 && month % 2 != 0) return 31
-    else if (month <= 7 && month != 2 && month % 2 == 0) return 30
-    else if (year % 100 == 0 && year % 400 != 0 && month == 2) return 28
-    else if (month == 2 && year % 4 == 0) return 29
-    else if (month == 2 && year % 4 != 0) return 28
-    else if (month >= 8 && month % 2 == 0) return 31
-    else return 30
+    return when {
+        month <= 7 && month != 2 && month % 2 != 0 -> 31
+        month <= 7 && month != 2 && month % 2 == 0 -> 30
+        year % 100 == 0 && year % 400 != 0 && month == 2 -> 28
+        month == 2 && year % 4 == 0 -> 29
+        month == 2 && year % 4 != 0 -> 28
+        month >= 8 && month % 2 == 0 -> 31
+        else -> 30
+    }
 }
 
 /**
@@ -97,9 +98,6 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     val miWall =
         if (r < s) r
         else s
-    println(ma)
-    println(mi)
-    println(sr)
     return sr * mi <= maWall * miWall && sr <= maWall && mi <= miWall
 }
 

@@ -8,6 +8,7 @@ import kotlin.math.max
 import kotlin.math.sqrt
 import kotlin.math.min
 
+
 // Урок 2: ветвления (здесь), логический тип (см. 2.2).
 // Максимальное количество баллов = 6
 // Рекомендуемое количество баллов = 5
@@ -102,8 +103,8 @@ fun timeForHalfWay(
         if (s1 > sHalf) sHalf / v1
         else if (s1 <= sHalf && s2 + s1 > sHalf) t1 + (sHalf - s1) / v2
         else if (s2 + s1 <= sHalf) t1 + t2 + (sHalf - s1 - s2) / v3
-        else 0
-    return time1.toDouble()
+        else 0.0
+    return time1
 }
 /**
  * Простая (2 балла)
@@ -119,9 +120,12 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
+    val a = kingX == rookX2 || kingY == rookY2
+    val b = kingX != rookX1 && kingY != rookY1
+    val c = kingX == rookX1 || kingY == rookY1
     if ((kingX == rookX1 || kingY == rookY1) && kingX != rookX2 && kingY != rookY2) return 1
-    else if ((kingX == rookX2 || kingY == rookY2) && kingX != rookX1 && kingY != rookY1) return 2
-    else if ((kingX == rookX2 || kingY == rookY2) || (kingX == rookX1 || kingY == rookY1)) return 3
+    if (a && b) return 2
+    else if (a || c) return 3
     else return 0
 }
 
@@ -140,9 +144,12 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
+    val a = (abs(kingX - bishopX) == abs(kingY - bishopY))
+    val b = kingX != rookX && kingY != rookY
+    val c = kingX == rookX || kingY == rookY
     if ((kingX == rookX || kingY == rookY) && (abs(kingX - bishopX) != abs(kingY - bishopY))) return 1
-    else if ((abs(kingX - bishopX) == abs(kingY - bishopY)) && ((kingX != rookX && kingY != rookY))) return 2
-    else if ((abs(kingX - bishopX) == abs(kingY - bishopY)) && ((kingX == rookX || kingY == rookY))) return 3
+    else if (a && b) return 2
+    else if (a && c) return 3
     else return 0
 }
 
@@ -167,10 +174,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
         if (a != ma && a != mi || a == b || a == c) a
         else if (c != ma && c != mi || c == a || c == b) c
         else b
-    if ((sr * sr + mi * mi > ma * ma) && (sr + mi > ma && sr + ma > mi && ma + mi > sr)) return 0
-    else if (sr * sr + mi * mi == ma * ma) return 1
-    else if ((sr * sr + mi * mi < ma * ma) && ((sr + mi > ma && sr + ma > mi && ma + mi > sr))) return 2
-    else return -1
+    return when {
+        (sr * sr + mi * mi > ma * ma) && (sr + mi > ma && sr + ma > mi && ma + mi > sr) -> 0
+        (sr * sr + mi * mi == ma * ma) -> 1
+        (sr * sr + mi * mi < ma * ma) && ((sr + mi > ma && sr + ma > mi && ma + mi > sr)) -> 2
+        else -> -1
+    }
 }
 
 /**
@@ -182,11 +191,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if (b < c || d < a) return -1
-    else if ((c >= a) && (c <= b) && (d >= b)) return b - c
-    else if ((c >= a) && (c <= b) && (d <= b)) return d - c
-    else if ((a >= c) && (a <= d) && (b >= d)) return d - a
-    else if ((a >= c) && (a <= d) && (b <= d)) return b - a
-    else return -1
-
+    return when {
+        (b < c || d < a) -> -1
+        (c >= a) && (c <= b) && (d >= b) -> b - c
+        (c >= a) && (c <= b) && (d <= b) -> d - c
+        (a >= c) && (a <= d) && (b >= d) -> d - a
+        (a >= c) && (a <= d) && (b <= d) -> b - a
+        else -> -1
+    }
 }
