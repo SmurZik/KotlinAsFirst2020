@@ -2,6 +2,8 @@
 
 package lesson3.task1
 
+import org.w3c.dom.NamedNodeMap
+import kotlin.math.PI
 import kotlin.math.sqrt
 import kotlin.math.max
 import kotlin.math.abs
@@ -299,10 +301,10 @@ fun hasDifferentDigits(n: Int): Boolean {
 }
 
 
-fun exponentiation(n: Int, x: Double): Double {
+fun exponentiation(n: Int, x: Int): Int {
     var x1 = 1.0
     for (i in 1..n) x1 *= x
-    return x1
+    return x1.toInt()
 }
 
 /**
@@ -315,25 +317,7 @@ fun exponentiation(n: Int, x: Double): Double {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 
-fun sin(x: Double, eps: Double): Double {
-    var x1 = x
-    var s = 0.0
-    var k = 1
-    var z = 1
-    while (abs(x1) >= eps) {
-        if (z % 2 != 0) {
-            x1 = exponentiation(k + 2, x) / factorial(k + 2)
-            s += exponentiation(k, x) / factorial(k)
-            k += 2
-        } else {
-            x1 = exponentiation(k + 2, x) / factorial(k + 2)
-            s -= exponentiation(k, x) / factorial(k)
-            k += 2
-        }
-        z += 1
-    }
-    return s
-}
+fun sin(x: Double, eps: Double): Double = TODO()
 
 
 /**
@@ -356,7 +340,35 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var z: Int
+    var k = 1
+    var m: Int
+    var n1 = n
+    var x: Int
+    var x2: Int
+    while (true) {
+        x = k * k
+        x2 = x
+        z = 0
+        while (x2 > 0) {
+            z++
+            x2 /= 10
+        }
+        if (n1 - z > 0) {
+            n1 -= z
+            k += 1
+        } else if (n1 - z == 0) {
+            m = x % 10
+            k += 1
+            return m
+        } else {
+            k += 1
+            return (x / exponentiation(abs(n1 - z), 10)) % 10
+        }
+    }
+}
+
 
 /**
  * Сложная (5 баллов)
