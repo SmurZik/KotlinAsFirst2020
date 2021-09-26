@@ -3,6 +3,8 @@
 package lesson3.task1
 
 import kotlin.math.sqrt
+import kotlin.math.max
+import kotlin.math.abs
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -72,7 +74,18 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int {
+    var k = 0
+    var number = n
+    if (number == 0) return 1
+    else {
+        while (number > 0) {
+            k++
+            number /= 10
+        }
+    }
+    return k
+}
 
 /**
  * Простая (2 балла)
@@ -80,21 +93,50 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int {
+    var fib1 = 1
+    var fib2 = 1
+    var fib3 = 1
+    if (n < 3) return 1
+    else {
+        for (i in 3..n) {
+            fib3 = fib1 + fib2
+            fib1 = fib2
+            fib2 = fib3
+        }
+        return fib3
+    }
+
+}
 
 /**
  * Простая (2 балла)
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
-
+fun minDivisor(n: Int): Int {
+    var minDel = 1
+    for (d in 2..(n / 2)) {
+        if (n % d == 0) {
+            minDel = d
+            break
+        }
+    }
+    if (minDel == 1) return n
+    return minDel
+}
 /**
  * Простая (2 балла)
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    var maxDel = 1
+    for (d in 1 until n) {
+        if (n % d == 0) maxDel = max(maxDel, d)
+    }
+    return maxDel
+}
 
 /**
  * Простая (2 балла)
@@ -112,7 +154,16 @@ fun maxDivisor(n: Int): Int = TODO()
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var number = x
+    var k = 0
+    while (number != 1) {
+        if (number % 2 == 0) number /= 2
+        else number = 3 * number + 1
+        k++
+    }
+    return k
+}
 
 /**
  * Средняя (3 балла)
@@ -120,7 +171,17 @@ fun collatzSteps(x: Int): Int = TODO()
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int = TODO()
+fun lcm(m: Int, n: Int): Int {
+    var nok = 0
+    for (k in 1..(m * n) / 2) {
+        if ((k % m == 0) && (k % n == 0)) {
+            nok = k
+            break
+        }
+    }
+    if (nok == 0) nok = m * n
+    return nok
+}
 
 /**
  * Средняя (3 балла)
@@ -129,7 +190,16 @@ fun lcm(m: Int, n: Int): Int = TODO()
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    var flag = 0
+    for (i in 2..m) {
+        if ((m % i == 0) && (n % i == 0)) {
+            flag = 1
+            break
+        }
+    }
+    return flag == 0
+}
 
 /**
  * Средняя (3 балла)
@@ -147,7 +217,18 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var previousNumber = 0
+    var tempNumber = 0
+    var number = n
+    while (number > 0) {
+        previousNumber *= 10
+        tempNumber = number % 10
+        previousNumber += tempNumber
+        number /= 10
+    }
+    return previousNumber
+}
 
 /**
  * Средняя (3 балла)
@@ -158,8 +239,31 @@ fun revert(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
-
+fun isPalindrome(n: Int): Boolean {
+    var number = n
+    var n1 = n
+    var k = 0
+    var flag = 0
+    var mn = 1
+    if (n < 10) return true
+    else {
+        while (number > 0) {
+            k++
+            number /= 10
+        }
+        for (i in 1 until k) mn *= 10
+        while (n1 > 0) {
+            if (n1 % 10 != n1 / mn) {
+                flag = 1
+                break
+            }
+            n1 %= mn
+            n1 /= 10
+            mn /= 100
+        }
+        return flag == 0
+    }
+}
 /**
  * Средняя (3 балла)
  *
@@ -168,7 +272,38 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var number = n
+    var n1 = 0
+    var k = 0
+    var mn = 1
+    var flag = 0
+    if (n < 10) return false
+    else {
+        while (number > 0) {
+            k++
+            number /= 10
+        }
+        number = n
+        for (i in 1 until k) mn *= 10
+        while (number > 0) {
+            n1 = number
+            while (n1 > 0) {
+                if ((n1 % 10) != (number % 10)) flag = 1
+                n1 /= 10
+            }
+            number /= 10
+        }
+        return flag == 1
+    }
+}
+
+
+fun exponentiation(n: Int, x: Double): Double {
+    var x1 = 1.0
+    for (i in 1..n) x1 *= x
+    return x1
+}
 
 /**
  * Средняя (4 балла)
@@ -179,7 +314,27 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+
+fun sin(x: Double, eps: Double): Double {
+    var x1 = x
+    var s = 0.0
+    var k = 1
+    var z = 1
+    while (abs(x1) >= eps) {
+        if (z % 2 != 0) {
+            x1 = exponentiation(k + 2, x) / factorial(k + 2)
+            s += exponentiation(k, x) / factorial(k)
+            k += 2
+        } else {
+            x1 = exponentiation(k + 2, x) / factorial(k + 2)
+            s -= exponentiation(k, x) / factorial(k)
+            k += 2
+        }
+        z += 1
+    }
+    return s
+}
+
 
 /**
  * Средняя (4 балла)
