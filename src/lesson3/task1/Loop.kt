@@ -6,6 +6,7 @@ import org.w3c.dom.NamedNodeMap
 import kotlin.math.PI
 import kotlin.math.sqrt
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.abs
 
 // Урок 3: циклы
@@ -81,7 +82,7 @@ fun digitNumber(n: Int): Int {
     var number = n
     if (number == 0) return 1
     else {
-        while (number > 0) {
+        while (abs(number) > 0) {
             k++
             number /= 10
         }
@@ -99,16 +100,15 @@ fun fib(n: Int): Int {
     var fib1 = 1
     var fib2 = 1
     var fib3 = 1
-    if (n < 3) return 1
+    return if (n < 3) 1
     else {
         for (i in 3..n) {
             fib3 = fib1 + fib2
             fib1 = fib2
             fib2 = fib3
         }
-        return fib3
+        fib3
     }
-
 }
 
 /**
@@ -174,17 +174,17 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var nok = 0
-    for (k in 1..(m * n) / 2) {
-        if ((k % m == 0) && (k % n == 0)) {
-            nok = k
-            break
+    var ma = max(m, n)
+    var mi = min(m, n)
+    while (ma != mi) {
+        if (ma > mi) {
+            ma -= mi
+        } else if (ma < mi) {
+            mi -= ma
         }
     }
-    if (nok == 0) nok = m * n
-    return nok
+    return m * n / ma
 }
-
 /**
  * Средняя (3 балла)
  *
@@ -202,7 +202,6 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     }
     return flag == 0
 }
-
 /**
  * Средняя (3 балла)
  *
@@ -379,4 +378,32 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var z: Int
+    var k = 1
+    var m: Int
+    var n1 = n
+    var x: Int
+    var x2: Int
+    while (true) {
+        x = fib(k)
+        x2 = x
+        z = 0
+        while (x2 > 0) {
+            z++
+            x2 /= 10
+        }
+        if (n1 - z > 0) {
+            n1 -= z
+            k += 1
+        } else if (n1 - z == 0) {
+            m = x % 10
+            k += 1
+            return m
+        } else {
+            k += 1
+            return (x / exponentiation(abs(n1 - z), 10)) % 10
+        }
+    }
+}
+
