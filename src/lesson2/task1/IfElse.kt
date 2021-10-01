@@ -123,7 +123,7 @@ fun whichRookThreatens(
     val y2Threat = kingY == rookY2
     val x1Threat = kingX == rookX1
     val y1Threat = kingY == rookY1
-    if ((x1Threat || y1Threat && !x2Threat && !y2Threat)) return 1
+    if ((x1Threat || y1Threat) && (!x2Threat && !y2Threat)) return 1
     return if ((x2Threat || y2Threat) && (!x1Threat && !y1Threat)) 2
     else if ((x2Threat || y2Threat) && (x1Threat || y1Threat)) 3
     else 0
