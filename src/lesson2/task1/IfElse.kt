@@ -6,7 +6,6 @@ import lesson1.task1.discriminant
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
-import kotlin.math.min
 
 
 // Урок 2: ветвления (здесь), логический тип (см. 2.2).
@@ -120,13 +119,14 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    val a = kingX == rookX2 || kingY == rookY2
-    val b = kingX != rookX1 && kingY != rookY1
-    val c = kingX == rookX1 || kingY == rookY1
-    if ((kingX == rookX1 || kingY == rookY1) && kingX != rookX2 && kingY != rookY2) return 1
-    if (a && b) return 2
-    else if (a || c) return 3
-    else return 0
+    val x2Threat = kingX == rookX2
+    val y2Threat = kingY == rookY2
+    val x1Threat = kingX == rookX1
+    val y1Threat = kingY == rookY1
+    if ((x1Threat || y1Threat && !x2Threat && !y2Threat)) return 1
+    return if ((x2Threat || y2Threat) && (!x1Threat && !y1Threat)) 2
+    else if ((x2Threat || y2Threat) && (x1Threat || y1Threat)) 3
+    else 0
 }
 
 /**
@@ -144,13 +144,12 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    val a = (abs(kingX - bishopX) == abs(kingY - bishopY))
-    val b = kingX != rookX && kingY != rookY
-    val c = kingX == rookX || kingY == rookY
-    if ((kingX == rookX || kingY == rookY) && (abs(kingX - bishopX) != abs(kingY - bishopY))) return 1
-    else if (a && b) return 2
-    else if (a && c) return 3
-    else return 0
+    val bishopThreat = (abs(kingX - bishopX) == abs(kingY - bishopY))
+    val rookThreat = kingX == rookX || kingY == rookY
+    return if ((rookThreat) && (!bishopThreat)) 1
+    else if (bishopThreat && !rookThreat) 2
+    else if (bishopThreat && rookThreat) 3
+    else 0
 }
 
 /**
