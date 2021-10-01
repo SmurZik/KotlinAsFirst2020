@@ -2,8 +2,6 @@
 
 package lesson3.task1
 
-import org.w3c.dom.NamedNodeMap
-import kotlin.math.PI
 import kotlin.math.sqrt
 import kotlin.math.max
 import kotlin.math.min
@@ -100,15 +98,12 @@ fun fib(n: Int): Int {
     var fib1 = 1
     var fib2 = 1
     var fib3 = 1
-    return if (n < 3) 1
-    else {
-        for (i in 3..n) {
-            fib3 = fib1 + fib2
-            fib1 = fib2
-            fib2 = fib3
-        }
-        fib3
+    for (i in 3..n) {
+        fib3 = fib1 + fib2
+        fib1 = fib2
+        fib2 = fib3
     }
+    return fib3
 }
 
 /**
@@ -117,15 +112,10 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var minDel = 1
     for (d in 2..(n / 2)) {
-        if (n % d == 0) {
-            minDel = d
-            break
-        }
+        if (n % d == 0) return d
     }
-    if (minDel == 1) return n
-    return minDel
+    return n
 }
 /**
  * Простая (2 балла)
@@ -240,29 +230,33 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
+fun digitNumbers(k: Int): Int {
+    var k1 = k
+    var numberOfDigits = 0
+    while (k1 > 0) {
+        numberOfDigits++
+        k1 /= 10
+    }
+    return numberOfDigits
+}
+
 fun isPalindrome(n: Int): Boolean {
-    var number = n
-    var n1 = n
-    var k = 0
-    var flag = 0
-    var mn = 1
+    var number1 = n
+    var flag = true
+    var divider = 1
     if (n < 10) return true
     else {
-        while (number > 0) {
-            k++
-            number /= 10
-        }
-        for (i in 1 until k) mn *= 10
-        while (n1 > 0) {
-            if (n1 % 10 != n1 / mn) {
-                flag = 1
+        for (i in 1 until digitNumbers(n)) divider *= 10
+        while (number1 > 0) {
+            if (number1 % 10 != number1 / divider) {
+                flag = false
                 break
             }
-            n1 %= mn
-            n1 /= 10
-            mn /= 100
+            number1 %= divider
+            number1 /= 10
+            divider /= 100
         }
-        return flag == 0
+        return flag
     }
 }
 /**
@@ -274,28 +268,23 @@ fun isPalindrome(n: Int): Boolean {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var number = n
-    var n1 = 0
-    var k = 0
-    var mn = 1
-    var flag = 0
+    var number: Int
+    var number1: Int
+    var divider = 1
+    var flag = false
     if (n < 10) return false
     else {
-        while (number > 0) {
-            k++
-            number /= 10
-        }
         number = n
-        for (i in 1 until k) mn *= 10
+        for (i in 1 until digitNumbers(n)) divider *= 10
         while (number > 0) {
-            n1 = number
-            while (n1 > 0) {
-                if ((n1 % 10) != (number % 10)) flag = 1
-                n1 /= 10
+            number1 = number
+            while (number1 > 0) {
+                if ((number1 % 10) != (number % 10)) flag = true
+                number1 /= 10
             }
             number /= 10
         }
-        return flag == 1
+        return flag
     }
 }
 
@@ -339,36 +328,42 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int {
-    var z: Int
-    var k = 1
-    var m: Int
-    var n1 = n
-    var x: Int
+
+fun sequenceDigit(n: Int, f: Int): Int {
+    var count = 1
+    var number: Int = if (f == 0) n
+    else f
+    var x = 1
     var x2: Int
     while (true) {
-        x = k * k
+        if (f == 0) {
+            x = count * count
+        }
+        if (n == 0) {
+            x = fib(count)
+        }
         x2 = x
-        z = 0
+        var numberOfDigits = 0
         while (x2 > 0) {
-            z++
+            numberOfDigits++
             x2 /= 10
         }
-        if (n1 - z > 0) {
-            n1 -= z
-            k += 1
-        } else if (n1 - z == 0) {
-            m = x % 10
-            k += 1
+        if (number - numberOfDigits > 0) {
+            number -= numberOfDigits
+            count += 1
+        } else if (number - numberOfDigits == 0) {
+            var m = x % 10
+            count += 1
             return m
         } else {
-            k += 1
-            return (x / exponentiation(abs(n1 - z), 10)) % 10
+            count += 1
+            return (x / exponentiation(abs(number - numberOfDigits), 10)) % 10
         }
     }
 }
 
 
+fun squareSequenceDigit(n: Int): Int = sequenceDigit(n, 0)
 /**
  * Сложная (5 баллов)
  *
@@ -378,32 +373,4 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int {
-    var z: Int
-    var k = 1
-    var m: Int
-    var n1 = n
-    var x: Int
-    var x2: Int
-    while (true) {
-        x = fib(k)
-        x2 = x
-        z = 0
-        while (x2 > 0) {
-            z++
-            x2 /= 10
-        }
-        if (n1 - z > 0) {
-            n1 -= z
-            k += 1
-        } else if (n1 - z == 0) {
-            m = x % 10
-            k += 1
-            return m
-        } else {
-            k += 1
-            return (x / exponentiation(abs(n1 - z), 10)) % 10
-        }
-    }
-}
-
+fun fibSequenceDigit(n: Int): Int = sequenceDigit(0, n)
