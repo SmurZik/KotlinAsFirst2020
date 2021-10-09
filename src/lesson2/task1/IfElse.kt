@@ -114,13 +114,11 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int {
-    return when {
-        (kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2) -> 3
-        (kingX == rookX1 || kingY == rookY1) -> 1
-        (kingX == rookX2 || kingY == rookY2) -> 2
-        else -> 0
-    }
+): Int = when {
+    (kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2) -> 3
+    (kingX == rookX1 || kingY == rookY1) -> 1
+    (kingX == rookX2 || kingY == rookY2) -> 2
+    else -> 0
 }
 
 
@@ -138,14 +136,13 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int {
-    return when {
-        (kingX == rookX || kingY == rookY) && (kingX + kingY) == (bishopX + bishopY) || (kingX - kingY) == (bishopX - bishopY) -> 3
-        (kingX == rookX || kingY == rookY) -> 1
-        (kingX + kingY) == (bishopX + bishopY) -> 2
-        else -> 0
-    }
+): Int = when {
+    (kingX == rookX || kingY == rookY) && ((kingX + kingY) == (bishopX + bishopY) || (kingX - kingY) == (bishopX - bishopY)) -> 3
+    (kingX == rookX || kingY == rookY) -> 1
+    (kingX + kingY) == (bishopX + bishopY) -> 2
+    else -> 0
 }
+
 
 /**
  * Простая (2 балла)
@@ -171,12 +168,12 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
         len = c * c
         sum = a * a + b * b
     }
-    if (len < sum)
-        return 0
+    return if (len < sum)
+        0
     else if (len == sum)
-        return 1
+        1
     else
-        return 2
+        2
 }
 
 
@@ -188,13 +185,10 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    return when {
-        (a <= c) && (c <= b) && (b <= d) -> b - c
-        (c <= a) && (d <= b) && (a <= d) -> d - a
-        (c >= a) && (d <= b) && (c <= b) -> d - c
-        (c <= a) && (a <= d) && (b <= d) -> b - a
-        else -> -1
-
-    }
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = when {
+    (a <= c) && (c <= b) && (b <= d) -> b - c
+    (c <= a) && (d <= b) && (a <= d) -> d - a
+    (c >= a) && (d <= b) && (c <= b) -> d - c
+    (c <= a) && (a <= d) && (b <= d) -> b - a
+    else -> -1
 }
