@@ -90,9 +90,15 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    if (n <= 2)
-        return 1
-    return (fib(n - 2) + fib(n - 1))
+    var fibFirst = 1
+    var fibSecond = 1
+    var fibThird = 1
+    for (i in 3..n) {
+        fibThird = fibFirst + fibSecond
+        fibFirst = fibSecond
+        fibSecond = fibThird
+    }
+    return fibThird
 }
 
 /**
@@ -178,7 +184,13 @@ fun lcm(m: Int, n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    for (i in 2..m)
+        if ((n % i == 0) && (m % i == 0)) {
+            return false
+        }
+    return true
+}
 
 /**
  * Средняя (3 балла)
@@ -232,7 +244,6 @@ fun isPalindrome(n: Int): Boolean {
  */
 fun hasDifferentDigits(n: Int): Boolean = TODO()
 
-
 /**
  * Средняя (4 балла)
  *
@@ -276,3 +287,4 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun fibSequenceDigit(n: Int): Int = TODO()
+
