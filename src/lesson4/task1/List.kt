@@ -127,7 +127,11 @@ fun abs(v: List<Double>): Double = TODO()
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double {
+    if (list.isNotEmpty())
+        return list.sum() / list.size
+    return 0.0
+}
 
 /**
  * Средняя (3 балла)
@@ -137,7 +141,13 @@ fun mean(list: List<Double>): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    val mean = list.sum() / list.size
+    for (i in 0 until list.size)
+        list[i] -= mean
+    return list
+
+}
 
 /**
  * Средняя (3 балла)
