@@ -149,14 +149,10 @@ fun mean(list: List<Double>): Double {
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     val mean = mean(list)
-    return if (list.isEmpty()) {
-        list
-    } else {
-        for (i in 0 until list.size) {
-            list[i] -= mean
-        }
-        list
+    for (i in 0 until list.size) {
+        list[i] -= mean
     }
+    return list
 }
 
 
@@ -226,7 +222,7 @@ fun factorize(n: Int): List<Int> {
         } else del++
     }
     if (n1 > 1) result.add(n1)
-    return result.sorted()
+    return result
 }
 
 /**
@@ -249,13 +245,11 @@ fun convert(n: Int, base: Int): List<Int> {
     var n1 = n
     val list = mutableListOf<Int>()
     if (n1 == 0) return listOf(0)
-    else {
-        while (n1 > 0) {
-            list.add(0, n1 % base)
-            n1 /= base
-        }
+    while (n1 > 0) {
+        list.add(n1 % base)
+        n1 /= base
     }
-    return list
+    return list.reversed()
 }
 
 /**
@@ -339,29 +333,18 @@ fun roman(n: Int): String {
     val arabianNumbers = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
     var result = ""
     while (n1 > 0) {
-        for (i in 0 until arabianNumbers.size) {
-            if (n1 < arabianNumbers[i]) {
-                while (n1 >= arabianNumbers[i - 1]) {
-                    n1 -= arabianNumbers[i - 1]
-                    result += romanNumbers[i - 1]
-                    break
-                }
-            } else if (n1 == arabianNumbers[i]) {
-                result += romanNumbers[i]
-                n1 -= arabianNumbers[i]
-                break
-            } else if (i == 12) {
-                while (n1 >= arabianNumbers[12]) {
-                    n1 -= arabianNumbers[12]
-                    result += romanNumbers[12]
-                    break
+        for (i in arabianNumbers.size - 1 downTo 0) {
+            println(arabianNumbers[i])
+            if (n1 >= arabianNumbers[i]) {
+                while (n1 >= arabianNumbers[i]) {
+                    n1 -= arabianNumbers[i]
+                    result += romanNumbers[i]
                 }
             }
         }
     }
     return result
 }
-
 /**
  * Очень сложная (7 баллов)
  *
