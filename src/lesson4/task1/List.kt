@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson3.task1.digitNumber
 import lesson3.task1.exponentiation
 import kotlin.math.sqrt
 
@@ -352,4 +353,91 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    var z = digitNumber(n)
+    var n1 = n
+    val result = mutableListOf<String>()
+    val russianUnits = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val russianFirstDoubleDigits =
+        listOf(
+            "одиннадцать",
+            "двенадцать",
+            "тринадцать",
+            "четырнадцать",
+            "пятнадцать",
+            "шестнадцать",
+            "семнадцать",
+            "восемнадцать",
+            "девятнадцать"
+        )
+    val russianDozens =
+        listOf(
+            "десять",
+            "двадцать",
+            "тридцать",
+            "сорок",
+            "пятьдесят",
+            "шестьдесят",
+            "семьдесят",
+            "восемьдесят",
+            "девяносто"
+        )
+    val russianHundreds =
+        listOf("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    while (n1 > 0) {
+        if (z == 6) {
+            result += russianHundreds[(n1 / exponentiation(z - 1, 10)) - 1]
+            n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+            z = digitNumber(n1)
+            if (z < 4) result += "тысяч"
+        } else if (z == 5) {
+            if (n1 / 1000 > 19) {
+                result += russianDozens[(n1 / exponentiation(z - 1, 10)) - 1]
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+                if (z < 4) result += "тысяч"
+            } else {
+                result += russianFirstDoubleDigits[((n1 / 1000) % 10) - 1]
+                n1 -= (n1 / exponentiation(z - 2, 10)) * exponentiation(z - 2, 10)
+                z = digitNumber(n1)
+                if (z < 4) result += "тысяч"
+            }
+        } else if (z == 4) {
+            if (n1 / 1000 == 1) {
+                result += "одна тысяча"
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+            } else if (n1 / 1000 == 2) {
+                result += "две тысячи"
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+            } else if (n1 / 1000 == 3 || n1 / 1000 == 4) {
+                result += russianUnits[n1 / 1000 - 1] + "тысячи"
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+            } else {
+                result += russianUnits[n1 / 1000 - 1] + "тысяч"
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+            }
+        } else if (z == 3) {
+            result += russianHundreds[(n1 / exponentiation(z - 1, 10)) - 1]
+            n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+            z = digitNumber(n1)
+        } else if (z == 2) {
+            if (n > 19) {
+                result += russianDozens[(n1 / exponentiation(z - 1, 10)) - 1]
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+            } else {
+                result += russianFirstDoubleDigits[(n1 % 10) - 1]
+                n1 = 0
+                z -= 1
+            }
+        } else if (z == 1) {
+            result += russianUnits[n1 - 1]
+            n1 = 0
+        }
+    }
+    return result.joinToString(separator = " ")
+}
