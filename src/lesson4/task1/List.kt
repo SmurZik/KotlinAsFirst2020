@@ -395,12 +395,12 @@ fun russian(n: Int): String {
                 result += russianDozens[(n1 / exponentiation(z - 1, 10)) - 1]
                 n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
                 z = digitNumber(n1)
-                if (z < 4) result += " тысяч"
+                if (z < 4) result += "тысяч"
             } else {
                 result += russianFirstDoubleDigits[((n1 / 1000) % 10) - 1]
                 n1 -= (n1 / exponentiation(z - 2, 10)) * exponentiation(z - 2, 10)
                 z = digitNumber(n1)
-                if (z < 4) result += " тысяч"
+                if (z < 4) result += "тысяч"
             }
         } else if (z == 4) {
             if (n1 / 1000 == 1) {
@@ -412,11 +412,11 @@ fun russian(n: Int): String {
                 n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
                 z = digitNumber(n1)
             } else if (n1 / 1000 == 3 || n1 / 1000 == 4) {
-                result += russianUnits[n1 / 1000 - 1] + "тысячи"
+                result += russianUnits[n1 / 1000 - 1] + " тысячи"
                 n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
                 z = digitNumber(n1)
             } else {
-                result += russianUnits[n1 / 1000 - 1] + "тысяч"
+                result += russianUnits[n1 / 1000 - 1] + " тысяч"
                 n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
                 z = digitNumber(n1)
             }
