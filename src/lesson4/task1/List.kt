@@ -425,7 +425,7 @@ fun russian(n: Int): String {
             n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
             z = digitNumber(n1)
         } else if (z == 2) {
-            if (n > 19) {
+            if (n1 > 19) {
                 result += russianDozens[(n1 / exponentiation(z - 1, 10)) - 1]
                 n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
                 z = digitNumber(n1)
