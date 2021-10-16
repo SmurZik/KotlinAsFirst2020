@@ -107,7 +107,7 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (i in 2..n)
+    for (i in 2..(n / 2))
         if (n % i == 0) {
             return i
         }
@@ -151,12 +151,11 @@ fun collatzSteps(x: Int): Int {
     var num = x
     while (num != 1) {
         if (num % 2 == 0) {
-            sum += 1
             num /= 2
         } else {
-            sum += 1
             num = 3 * num + 1
         }
+        sum += 1
     }
     return sum
 }
@@ -185,13 +184,14 @@ fun lcm(m: Int, n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    for (i in 2..m)
-        if ((n % i == 0) && (m % i == 0)) {
-            return false
-        }
-    return true
+    var numFirst = m
+    var numSecond = n
+    while (numFirst != 0 && numSecond != 0) {
+        if (numFirst > numSecond) numFirst %= numSecond
+        else numSecond %= numFirst
+    }
+    return numFirst + numSecond == 1
 }
-
 /**
  * Средняя (3 балла)
  *
@@ -229,9 +229,8 @@ fun isPalindrome(n: Int): Boolean {
         reversionNumb = reversionNumb * 10 + dig
         numb /= 10
     }
-    if (n == reversionNumb)
-        return true
-    return false
+return (n == reversionNumb)
+
 }
 
 /**
