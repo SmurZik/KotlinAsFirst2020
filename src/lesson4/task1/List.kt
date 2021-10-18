@@ -359,6 +359,7 @@ fun russian(n: Int): String {
     val russianUnits = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
     val russianFirstDoubleDigits =
         listOf(
+            "десять",
             "одиннадцать",
             "двенадцать",
             "тринадцать",
@@ -396,7 +397,7 @@ fun russian(n: Int): String {
                 z = digitNumber(n1)
                 if (z < 4) result += "тысяч"
             } else {
-                result += russianFirstDoubleDigits[((n1 / 1000) % 10) - 1]
+                result += russianFirstDoubleDigits[((n1 / 1000) % 10)]
                 n1 -= (n1 / exponentiation(z - 2, 10)) * exponentiation(z - 2, 10)
                 z = digitNumber(n1)
                 if (z < 4) result += "тысяч"
@@ -429,7 +430,7 @@ fun russian(n: Int): String {
                 n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
                 z = digitNumber(n1)
             } else {
-                result += russianFirstDoubleDigits[(n1 % 10) - 1]
+                result += russianFirstDoubleDigits[(n1 % 10)]
                 n1 = 0
             }
         } else if (z == 1) {
