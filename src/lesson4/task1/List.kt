@@ -431,7 +431,6 @@ fun russian(n: Int): String {
             } else {
                 result += russianFirstDoubleDigits[(n1 % 10) - 1]
                 n1 = 0
-                z -= 1
             }
         } else if (z == 1) {
             result += russianUnits[n1 - 1]
