@@ -331,15 +331,10 @@ fun roman(n: Int): String {
     val romanNumbers = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
     val arabianNumbers = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
     var result = ""
-    while (n1 > 0) {
-        for (i in arabianNumbers.size - 1 downTo 0) {
-            println(arabianNumbers[i])
-            if (n1 >= arabianNumbers[i]) {
-                while (n1 >= arabianNumbers[i]) {
-                    n1 -= arabianNumbers[i]
-                    result += romanNumbers[i]
-                }
-            }
+    for (i in arabianNumbers.size - 1 downTo 0) {
+        while (n1 >= arabianNumbers[i]) {
+            n1 -= arabianNumbers[i]
+            result += romanNumbers[i]
         }
     }
     return result
