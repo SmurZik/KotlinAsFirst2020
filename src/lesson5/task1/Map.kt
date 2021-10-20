@@ -126,8 +126,9 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
+    if (a.isEmpty() && b.isEmpty()) return true
     for (key in b.keys) {
-        if (a[key] == b[key] || (a.isEmpty() && b.isEmpty())) return true
+        if (a[key] == b[key]) return true
     }
     return false
 }
@@ -182,7 +183,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     var differentNumbers = ""
-    var result = mutableMapOf("" to "")
+    var result = mutableMapOf(Double.NaN.toString() to Double.NaN.toString())
     for ((key, value) in mapA) {
         for (keyb in mapB.keys) {
             if (key == keyb) {
@@ -193,7 +194,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
             }
         }
     }
-    result.remove("")
+    result.remove(Double.NaN.toString())
     for ((key, value) in mapA) {
         if (!result.containsKey(key)) result += Pair(key, value)
     }
@@ -272,9 +273,14 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    val mapOfChar = mutableMapOf<Char, Char>()
     val s = word.lowercase(Locale.getDefault())
-    for (char in s) {
-        if (!chars.contains(char)) return false
+    for (char in chars) {
+        val x = char.lowercaseChar()
+        mapOfChar += Pair(char, x)
+    }
+    for (element in s) {
+        if (!mapOfChar.values.contains(element) && !mapOfChar.keys.contains(element)) return false
     }
     return true
 }
