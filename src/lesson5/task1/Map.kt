@@ -126,7 +126,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    if (a.isEmpty() && b.isEmpty()) return true
+    if (a.isEmpty()) return true
     for (key in b.keys) {
         if (a[key] == b[key]) return true
     }
@@ -185,9 +185,9 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
     var differentNumbers = ""
     var result = mutableMapOf(Double.NaN.toString() to Double.NaN.toString())
     for ((key, value) in mapA) {
-        for (keyb in mapB.keys) {
+        for ((keyb, valueb) in mapB) {
             if (key == keyb) {
-                if (!mapB.containsValue(value)) {
+                if (!mapB.containsValue(value) || !mapA.containsValue(valueb)) {
                     differentNumbers += mapA[key] + ", " + mapB[keyb]
                     result += Pair(key, differentNumbers)
                 }
