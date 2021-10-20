@@ -3,6 +3,7 @@
 package lesson5.task1
 
 import lesson4.task1.mean
+import java.util.*
 import kotlin.math.min
 
 // Урок 5: ассоциативные массивы и множества
@@ -102,9 +103,9 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     var tempGrades = mutableListOf<String>()
     val result = mutableMapOf<Int, List<String>>()
-    for (i in 0..5) {
+    for (value in grades.values) {
         for ((name, grade) in grades) {
-            if (grade == i) {
+            if (grade == value) {
                 tempGrades.add(name)
                 result += Pair(grade, tempGrades)
             }
@@ -271,7 +272,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    for (char in word) {
+    val s = word.lowercase(Locale.getDefault())
+    for (char in s) {
         if (!chars.contains(char)) return false
     }
     return true
