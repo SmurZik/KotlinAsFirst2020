@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import java.lang.NumberFormatException
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -62,6 +64,27 @@ fun main() {
     }
 }
 
+fun isDateCorrect(date: List<String>): Boolean {
+    try {
+        val day = date[0].toInt()
+        val month = date[1].toInt()
+        val year = date[2].toInt()
+        if (month in 1..12 && year > 0) {
+            when {
+                month <= 7 && month != 2 && month % 2 != 0 && day in 0..31 -> return true
+                month <= 7 && month != 2 && month % 2 == 0 && day in 0..30 -> return true
+                year % 100 == 0 && year % 400 != 0 && month == 2 && day in 0..28 -> return true
+                month == 2 && year % 4 == 0 && day in 0..29 -> return true
+                month == 2 && year % 4 != 0 && day in 0..28 -> return true
+                month >= 8 && month % 2 == 0 && day in 0..31 -> return true
+                month >= 8 && month % 2 != 0 && day in 0..30 -> return true
+            }
+        }
+    } catch (e: NumberFormatException) {
+        return false
+    }
+    return false
+}
 
 /**
  * Средняя (4 балла)
@@ -74,7 +97,34 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val parts = str.split(" ")
+    val date = parts.toMutableList()
+    if (date.size != 3) return ""
+    var month = 0
+    val months = listOf(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    months.forEachIndexed { index, s ->
+        if (s == parts[1]) month = index + 1
+    }
+    date[1] = month.toString()
+    if (isDateCorrect(date) && month != 0) {
+        return String.format("%02d.%02d.%4d", date[0].toInt(), date[1].toInt(), date[2].toInt())
+    }
+    return ""
+}
 
 /**
  * Средняя (4 балла)
@@ -86,7 +136,29 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val parts = digital.split(".")
+    val date = parts.toMutableList()
+    if (date.size != 3) return ""
+    if (isDateCorrect(date)) {
+        val months = listOf(
+            "января",
+            "февраля",
+            "марта",
+            "апреля",
+            "мая",
+            "июня",
+            "июля",
+            "августа",
+            "сентября",
+            "октября",
+            "ноября",
+            "декабря"
+        )
+        val month = months[date[1].toInt() - 1]
+        return "${date[0].toInt()} $month ${date[2]}"
+    } else return ""
+}
 
 /**
  * Средняя (4 балла)
@@ -114,7 +186,22 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val allowedDigits = listOf("%", "-")
+    val parts = jumps.split(" ")
+    val onlySuccessAttempts = mutableListOf<Int>()
+    val jump = parts.toMutableList()
+    jump.forEach {
+        try {
+            onlySuccessAttempts.add(it.toInt())
+        } catch (e: NumberFormatException) {
+            if (!allowedDigits.contains(it)) return -1
+        }
+    }
+    println(onlySuccessAttempts)
+    return if (onlySuccessAttempts.isEmpty()) -1
+    else onlySuccessAttempts.maxByOrNull { it }!!
+}
 
 /**
  * Сложная (6 баллов)
@@ -127,7 +214,30 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val allowedDigits = listOf('%', '-', '+')
+    val parts = jumps.split(" ")
+    val someAttempts = mutableListOf<Int>()
+    val onlyFailAttempts = mutableListOf<Int>()
+    val someDigits = mutableListOf<String>()
+    val jump = parts.toMutableList()
+    jump.forEach {
+        try {
+            someAttempts.add(it.toInt())
+        } catch (e: NumberFormatException) {
+            someDigits.add(it)
+        }
+    }
+    someDigits.forEachIndexed { index, s ->
+        if (!allowedDigits.toSet().containsAll(s.toSet())) return -1
+        else if (!s.contains('+')) onlyFailAttempts.add(someAttempts[index])
+    }
+    for (element in onlyFailAttempts) {
+        someAttempts.remove(element)
+    }
+    return if (someAttempts.isEmpty()) -1
+    else someAttempts.maxByOrNull { it }!!
+}
 
 /**
  * Сложная (6 баллов)
@@ -149,7 +259,23 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val parts = str.split(" ")
+    val words = mutableListOf<String>()
+    var startIndex = 0
+    var flag = true
+    parts.forEach {
+        words.add(it.lowercase())
+    }
+    for (i in 0 until words.size - 1) {
+        if (words[i] == words[i + 1]) {
+            flag = false
+            break
+        } else startIndex += words[i].length + 1
+    }
+    if (flag) return -1
+    return startIndex
+}
 
 /**
  * Сложная (6 баллов)
@@ -162,7 +288,26 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val parts = description.split("; ")
+    var maxPrice = 0.0
+    val divideDescription = mutableListOf<String>()
+    parts.forEach {
+        divideDescription += it.split(" ")
+    }
+    for (i in 1 until divideDescription.size step 2) {
+        try {
+            if (divideDescription[i].toDouble() < 0) return ""
+            if (maxPrice <= divideDescription[i].toDouble()) maxPrice = divideDescription[i].toDouble()
+        } catch (e: NumberFormatException) {
+            return ""
+        }
+    }
+    parts.forEach {
+        if (it.contains(maxPrice.toString())) return it.split(" ")[0]
+    }
+    return ""
+}
 
 /**
  * Сложная (6 баллов)
