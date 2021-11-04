@@ -66,7 +66,6 @@ fun main() {
 
 fun isDateCorrect(date: List<String>): Boolean {
     try {
-        if (date[2].length > 4) return false
         val day = date[0].toInt()
         val month = date[1].toInt()
         val year = date[2].toInt()
