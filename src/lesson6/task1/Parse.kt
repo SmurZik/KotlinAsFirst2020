@@ -69,7 +69,7 @@ fun isDateCorrect(date: List<String>): Boolean {
         val day = date[0].toInt()
         val month = date[1].toInt()
         val year = date[2].toInt()
-        if (month in 1..12 && year > 0) {
+        if (month in 1..12 && year > 0 && year < 2022) {
             when {
                 month <= 7 && month != 2 && month % 2 != 0 && day in 0..31 -> return true
                 month <= 7 && month != 2 && month % 2 == 0 && day in 0..30 -> return true
@@ -121,7 +121,7 @@ fun dateStrToDigit(str: String): String {
     }
     date[1] = month.toString()
     if (isDateCorrect(date) && month != 0) {
-        return String.format("%02d.%02d.%4d", date[0].toInt(), date[1].toInt(), date[2].toInt())
+        return String.format("%02d.%02d.%d", date[0].toInt(), date[1].toInt(), date[2].toInt())
     }
     return ""
 }
@@ -288,26 +288,7 @@ fun firstDuplicateIndex(str: String): Int {
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String {
-    val parts = description.split("; ")
-    var maxPrice = 0.0
-    val divideDescription = mutableListOf<String>()
-    parts.forEach {
-        divideDescription += it.split(" ")
-    }
-    for (i in 1 until divideDescription.size step 2) {
-        try {
-            if (divideDescription[i].toDouble() < 0) return ""
-            if (maxPrice <= divideDescription[i].toDouble()) maxPrice = divideDescription[i].toDouble()
-        } catch (e: NumberFormatException) {
-            return ""
-        }
-    }
-    parts.forEach {
-        if (it.contains(maxPrice.toString())) return it.split(" ")[0]
-    }
-    return ""
-}
+fun mostExpensive(description: String): String = TODO()
 
 /**
  * Сложная (6 баллов)
