@@ -69,7 +69,7 @@ fun isDateCorrect(date: List<String>): Boolean {
         val day = date[0].toInt()
         val month = date[1].toInt()
         val year = date[2].toInt()
-        if (month in 1..12 && year > 0 && year < 1000000) {
+        if (month in 1..12 && year > 0 && year < 10000000) {
             when {
                 month <= 7 && month != 2 && month % 2 != 0 && day in 0..31 -> return true
                 month <= 7 && month != 2 && month % 2 == 0 && day in 0..30 -> return true
