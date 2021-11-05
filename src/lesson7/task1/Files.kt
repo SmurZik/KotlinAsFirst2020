@@ -87,15 +87,18 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     val text = reader.readText().lowercase()
     val result = mutableMapOf<String, Int>()
     substrings.forEach { str ->
-        val s = text.replace(str.lowercase(), "delete")
-        val delete = "delete${str.first()}"
-        val count: Int = if (s.contains(delete) && str.toSet().size == 1) {
-            (text.length - s.lowercase().replace(delete, "").length) / str.length + 1
-        } else {
-            (text.length - s.lowercase().replace("delete", "").length) / str.length
+        var i = 0
+        var count = 0
+        while (i < text.length) {
+            val progressInText = text.indexOf(str.lowercase(), i)
+            if (progressInText != -1) {
+                count++
+                i = progressInText + 1
+            } else {
+                i++
+            }
         }
-        if (count != -1)
-            result += Pair(str, count)
+        result += Pair(str, count)
     }
     return result
 }
