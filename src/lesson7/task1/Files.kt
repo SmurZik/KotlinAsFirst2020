@@ -89,7 +89,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     substrings.forEach { str ->
         val s = text.replace(str.lowercase(), "delete")
         val delete = "delete${str.first()}"
-        val count: Int = if (s.contains(delete)) {
+        val count: Int = if (s.contains(delete) && str.toSet().size == 1) {
             (text.length - s.lowercase().replace(delete, "").length) / str.length + 1
         } else {
             (text.length - s.lowercase().replace("delete", "").length) / str.length
