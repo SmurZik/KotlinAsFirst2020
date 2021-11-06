@@ -99,16 +99,13 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
-    var tempGrades = mutableListOf<String>()
     val result = mutableMapOf<Int, List<String>>()
-    for (value in grades.values) {
-        for ((name, grade) in grades) {
-            if (grade == value) {
-                tempGrades.add(name)
-                result += Pair(grade, tempGrades)
-            }
-        }
-        tempGrades = mutableListOf()
+    for ((name, grade) in grades) {
+        if (grade in result) {
+            var temp = result[grade]
+            temp = temp!! + name
+            result += Pair(grade, temp)
+        } else result += Pair(grade, listOf(name))
     }
     return result
 }
@@ -217,10 +214,10 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     var minimumPrice = Double.MAX_VALUE
     var result = ""
     var flag = false
-    for ((name, cost) in stuff) {
-        if (cost.first == kind) {
-            if (cost.second <= minimumPrice) {
-                minimumPrice = cost.second
+    for ((name, kindCost) in stuff) {
+        if (kindCost.first == kind) {
+            if (kindCost.second <= minimumPrice) {
+                minimumPrice = kindCost.second
                 flag = true
                 result = name
             }
@@ -241,8 +238,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  */
 
 fun canBuildFrom(chars: List<Char>, word: String): Boolean =
-    if (word.isEmpty()) true
-    else chars.toSet().map { it.lowercase() }.containsAll(word.toSet().map { it.lowercase() })
+    (word.isEmpty()) || chars.toSet().map { it.lowercase() }.containsAll(word.toSet().map { it.lowercase() })
+
 
 /**
  * Средняя (4 балла)
@@ -257,14 +254,9 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean =
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
-    val result = mutableMapOf<String, Int>()
     val temp = list.groupBy { it }
-    for ((key, value) in temp) {
-        if (value.size > 1) {
-            result += Pair(key, value.size)
-        }
-    }
-    return result
+    val result = (temp.filter { it.value.size > 1 })
+    return result.entries.associate { (k, v) -> Pair(k, v.size) }
 }
 
 /**
