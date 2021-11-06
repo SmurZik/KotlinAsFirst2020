@@ -115,20 +115,16 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    val allowedDigits = listOf("%", "-")
-    val parts = jumps.split(" ")
+    val allowedDigits = setOf("%", "-")
+    val parts = jumps.split(Regex("\\s+"))
     val onlySuccessAttempts = mutableListOf<Int>()
-    val jump = parts.toMutableList()
-    jump.forEach {
-        try {
-            onlySuccessAttempts.add(it.toInt())
-        } catch (e: NumberFormatException) {
-            if (!allowedDigits.contains(it)) return -1
-        }
+    val jumpList = parts.toMutableList()
+    jumpList.forEach {
+        if (it.toIntOrNull() != null) {
+            onlySuccessAttempts.add(it.toIntOrNull()!!)
+        } else if (!allowedDigits.contains(it)) return -1
     }
-    println(onlySuccessAttempts)
-    return if (onlySuccessAttempts.isEmpty()) -1
-    else onlySuccessAttempts.maxByOrNull { it }!!
+    return onlySuccessAttempts.maxByOrNull { it } ?: -1
 }
 
 /**
@@ -143,28 +139,25 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val allowedDigits = listOf('%', '-', '+')
+    val allowedDigits = setOf('%', '-', '+')
     val parts = jumps.split(" ")
     val someAttempts = mutableListOf<Int>()
     val onlyFailAttempts = mutableListOf<Int>()
-    val someDigits = mutableListOf<String>()
+    val someSymbol = mutableListOf<String>()
     val jump = parts.toMutableList()
     jump.forEach {
-        try {
-            someAttempts.add(it.toInt())
-        } catch (e: NumberFormatException) {
-            someDigits.add(it)
-        }
+        if (it.toIntOrNull() != null) {
+            someAttempts.add(it.toIntOrNull()!!)
+        } else someSymbol.add(it)
     }
-    someDigits.forEachIndexed { index, s ->
-        if (!allowedDigits.toSet().containsAll(s.toSet())) return -1
-        else if (!s.contains('+')) onlyFailAttempts.add(someAttempts[index])
+    someSymbol.forEachIndexed { index, s ->
+        if (!allowedDigits.containsAll(s.toSet())) return -1
+        else if (!s.contains('+') && someAttempts.isNotEmpty()) onlyFailAttempts.add(someAttempts[index])
     }
     for (element in onlyFailAttempts) {
         someAttempts.remove(element)
     }
-    return if (someAttempts.isEmpty()) -1
-    else someAttempts.maxByOrNull { it }!!
+    return someAttempts.maxByOrNull { it } ?: -1
 }
 
 /**
@@ -188,18 +181,14 @@ fun plusMinus(expression: String): Int = TODO()
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
 fun firstDuplicateIndex(str: String): Int {
-    val parts = str.split(" ")
-    val words = mutableListOf<String>()
+    val parts = str.split(" ").map { it.lowercase() }
     var startIndex = 0
     var flag = true
-    parts.forEach {
-        words.add(it.lowercase())
-    }
-    for (i in 0 until words.size - 1) {
-        if (words[i] == words[i + 1]) {
+    for (i in 0 until parts.size - 1) {
+        if (parts[i] == parts[i + 1]) {
             flag = false
             break
-        } else startIndex += words[i].length + 1
+        } else startIndex += parts[i].length + 1
     }
     if (flag) return -1
     return startIndex
