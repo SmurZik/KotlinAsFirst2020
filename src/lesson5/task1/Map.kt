@@ -111,8 +111,9 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
     for ((key) in a)
-        if (a[key] == b[key]) return true
+        if ((a[key] == b[key]) && (b[key] != null)) return true
     return false
+
 }
 
 /**
@@ -196,7 +197,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     var minValue = 99999.0
     for ((name, value) in stuff) {
         if (value.first == kind) {
-            if (value.second < minValue) {
+            if (value.second <= minValue) {
                 minValue = value.second
                 result = name
             }
