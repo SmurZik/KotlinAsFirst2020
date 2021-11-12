@@ -265,11 +265,11 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     val alphabets = ('a'..'z').toMutableList()
-    var result = "0"
+    var result = ""
     val elem = convert(n, base)
     for (i in elem.indices) {
         val z = elem[i]
-        if (z < 10) {
+        if ((z < 10) && (z >= 0)) {
             result += z
         } else result += alphabets[z - 10]
     }
