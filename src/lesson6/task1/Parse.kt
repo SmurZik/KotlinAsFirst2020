@@ -2,8 +2,6 @@
 
 package lesson6.task1
 
-import java.lang.NumberFormatException
-
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -143,20 +141,19 @@ fun bestHighJump(jumps: String): Int {
     val parts = jumps.split(" ")
     val someAttempts = mutableListOf<Int>()
     val onlyFailAttempts = mutableListOf<Int>()
-    val someSymbol = mutableListOf<String>()
+    val someSymbols = mutableListOf<String>()
     val jump = parts.toMutableList()
     jump.forEach {
         if (it.toIntOrNull() != null) {
             someAttempts.add(it.toIntOrNull()!!)
-        } else someSymbol.add(it)
+        } else someSymbols.add(it)
     }
-    someSymbol.forEachIndexed { index, s ->
+    if (!someSymbols.contains("+")) return -1
+    someSymbols.forEachIndexed { index, s ->
         if (!allowedDigits.containsAll(s.toSet())) return -1
-        else if (!s.contains('+') && someAttempts.isNotEmpty()) onlyFailAttempts.add(someAttempts[index])
+        else if (!s.contains('+')) onlyFailAttempts.add(someAttempts[index])
     }
-    for (element in onlyFailAttempts) {
-        someAttempts.remove(element)
-    }
+    someAttempts.removeAll(onlyFailAttempts)
     return someAttempts.maxByOrNull { it } ?: -1
 }
 
