@@ -99,13 +99,11 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
-    val result = mutableMapOf<Int, List<String>>()
+    val result = mutableMapOf<Int, MutableList<String>>()
     for ((name, grade) in grades) {
         if (grade in result) {
-            var temp = result[grade]
-            temp = temp!! + name
-            result += Pair(grade, temp)
-        } else result += Pair(grade, listOf(name))
+            result[grade]!!.plusAssign(name)
+        } else result += Pair(grade, mutableListOf(name))
     }
     return result
 }
@@ -177,7 +175,6 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
     }
     return result
 }
-
 /**
  * Средняя (4 балла)
  *
@@ -212,19 +209,16 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var minimumPrice = Double.MAX_VALUE
-    var result = ""
-    var flag = false
+    var result: String? = null
     for ((name, kindCost) in stuff) {
         if (kindCost.first == kind) {
             if (kindCost.second <= minimumPrice) {
                 minimumPrice = kindCost.second
-                flag = true
                 result = name
             }
         }
     }
-    return if (flag) result
-    else null
+    return result
 }
 
 /**

@@ -64,14 +64,12 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    File(inputName).forEachLine {
-        if (!it.startsWith("_") || it.isEmpty()) {
-            writer.write(it)
-            writer.newLine()
+    File(outputName).bufferedWriter().use {
+        File(inputName).forEachLine { string ->
+            if (!string.startsWith("_") || string.isEmpty())
+                it.appendLine(string)
         }
     }
-    writer.close()
 }
 
 /**
@@ -97,6 +95,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
                 i = progressInText + 1
             } else {
                 i++
+                println(i)
             }
         }
         result += Pair(str, count)
