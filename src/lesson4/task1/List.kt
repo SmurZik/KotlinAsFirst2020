@@ -3,6 +3,7 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson3.task1.digitNumber
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -269,7 +270,7 @@ fun convertToString(n: Int, base: Int): String {
     val elem = convert(n, base)
     for (i in elem.indices) {
         val z = elem[i]
-        if ((z < 10) && (z >= 0)) {
+        if (z in 0..9) {
             result += z
         } else result += alphabets[z - 10]
     }
