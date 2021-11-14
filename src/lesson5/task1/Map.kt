@@ -318,8 +318,9 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
         if (map[number - list[i]] != null) {
             return Pair(map[number - list[i]]!!, i)
         }
+        map[list[i]] = i
     }
-    return -1 to -1
+    return Pair(-1, -1)
 }
 
 
