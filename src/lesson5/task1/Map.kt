@@ -212,14 +212,12 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
     var result: String? = null
     var minValue = Double.MAX_VALUE
     for ((name, value) in stuff) {
-        if (value.first == kind) {
-            if (value.second <= minValue) {
-                minValue = value.second
-                result = name
-            }
+        if ((value.first == kind) && (value.second <= minValue)) {
+            minValue = value.second
+            result = name
         }
     }
-    return result
+return result
 }
 
 /**
@@ -314,7 +312,16 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    for (i in 0 until list.size - 1) {
+        for (j in i + 1 until list.size) {
+            if (list[i] + list[j] == number) {
+                return Pair(i, j)
+            }
+        }
+    }
+    return -1 to -1
+}
 
 
 /**

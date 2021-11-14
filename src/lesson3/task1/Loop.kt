@@ -274,7 +274,21 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var number = 0
+    var sequenceToNumberOrDigit = 0
+    var lengthToNumberOrDigit = 0
+    while (lengthToNumberOrDigit < n) {
+        number++
+        sequenceToNumberOrDigit = number * number
+        lengthToNumberOrDigit += digitNumber(sequenceToNumberOrDigit) // функция из задачи выше
+    }
+    while (n < lengthToNumberOrDigit) {
+        lengthToNumberOrDigit--
+        sequenceToNumberOrDigit /= 10
+    }
+    return sequenceToNumberOrDigit % 10
+}
 
 /**
  * Сложная (5 баллов)
@@ -285,5 +299,19 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var number = 0
+    var sequenceToNumberOrDigit = 0
+    var lengthToNumberOrDigit = 0
+    while (lengthToNumberOrDigit < n) {
+        number++
+        sequenceToNumberOrDigit = fib(number) // функция из задачи выше
+        lengthToNumberOrDigit += digitNumber(sequenceToNumberOrDigit)
+    }
+    while (n < lengthToNumberOrDigit) {
+        lengthToNumberOrDigit--
+        sequenceToNumberOrDigit /= 10
+    }
+    return sequenceToNumberOrDigit % 10
+}
 
