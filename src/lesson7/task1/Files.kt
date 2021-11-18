@@ -94,12 +94,12 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
                 count++
                 i = progressInText + 1
             } else {
-                i++
-                println(i)
+                break
             }
         }
         result += Pair(str, count)
     }
+    reader.close()
     return result
 }
 
