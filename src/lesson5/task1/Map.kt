@@ -354,26 +354,23 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     val mutableTreasures = treasures.toMutableMap()
     var mutableCapacity = capacity
     val result = mutableSetOf<String>()
-    try {
-        val x = treasures.values.sortedByDescending { it.second }.groupBy({ it.second }, { it.first }).toMutableMap()
-        x.forEach { (key, value) ->
-            val mutableValue = value.toMutableList()
-            mutableValue.forEach { weight ->
-                val minWeight = mutableValue.minByOrNull { it }!!
-                println(minWeight)
-                if (mutableCapacity - minWeight >= 0) {
-                    mutableCapacity -= minWeight
-                    println(mutableCapacity)
-                    val keys =
-                        mutableTreasures.filterValues { it.first == minWeight && it.second == key }.keys.toMutableSet()
-                    result += keys.first()
-                    mutableTreasures.remove(keys.first(), Pair(weight, key))
-                    println(result)
-                } else if (mutableCapacity - minWeight >= 0 && result.isEmpty()) return emptySet()
-            }
+    val x = treasures.values.sortedByDescending { it.second }.groupBy({ it.second }, { it.first }).toMutableMap()
+    x.forEach { (key, value) ->
+        val mutableValue = value.toMutableList()
+        mutableValue.forEach { weight ->
+            val minWeight = mutableValue.minByOrNull { it }!!
+            println(minWeight)
+            if (mutableCapacity - minWeight >= 0) {
+                mutableCapacity -= minWeight
+                println(mutableCapacity)
+                val keys =
+                    mutableTreasures.filterValues { it.first == minWeight && it.second == key }.keys.toMutableSet()
+                result += keys.first()
+                mutableValue.remove(minWeight)
+                mutableTreasures.remove(keys.first(), Pair(weight, key))
+                println(result)
+            } else if (mutableCapacity - minWeight >= 0 && result.isEmpty()) return emptySet()
         }
-        return result
-    } catch (e: NoSuchElementException) {
-        return setOf("no")
     }
+    return result
 }
