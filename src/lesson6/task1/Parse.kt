@@ -145,7 +145,7 @@ fun bestHighJump(jumps: String): Int {
     val onlyFailAttempts = mutableListOf<Int>()
     val someSymbols = mutableListOf<String>()
     val jump = parts.toMutableList()
-    if (!(Regex("(\\d+ .*\\+)").containsMatchIn(jumps))) return -1
+    if (!(Regex("(\\d+ .*[+|%|-])").matches(jumps))) return -1
     jump.forEach {
         if (it.toIntOrNull() != null) {
             someAttempts.add(it.toIntOrNull()!!)
