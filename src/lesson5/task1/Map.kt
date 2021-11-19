@@ -350,4 +350,17 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    var mutableCapacity = capacity
+    val result = mutableSetOf<String>()
+    val x = treasures.values.sortedByDescending { it.second }.groupBy({ it.second }, { it.first }).toMutableMap()
+    x.forEach { (key, value) ->
+        val minWeight = value.minByOrNull { it }!!
+        if (mutableCapacity - minWeight >= 0) {
+            mutableCapacity -= minWeight
+            val keys = treasures.filterValues { it.first == minWeight }.keys
+            result += keys
+        } else if (mutableCapacity - minWeight >= 0 && result.isEmpty()) return emptySet()
+    }
+    return result
+}
