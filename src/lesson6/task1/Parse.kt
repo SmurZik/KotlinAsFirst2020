@@ -145,19 +145,13 @@ fun bestHighJump(jumps: String): Int {
     val onlyFailAttempts = mutableListOf<Int>()
     val someSymbols = mutableListOf<String>()
     val jump = parts.toMutableList()
-    val time = System.currentTimeMillis()
-    if (!(Regex("(\\d+ .*\\+)").containsMatchIn(jumps))) {
-        if (System.currentTimeMillis() - time > 1000) return 8
-        return -1
-    }
+    if (!(Regex("(\\d+ .*\\+)").containsMatchIn(jumps))) return -1
     jump.forEach {
-        if (System.currentTimeMillis() - time > 1000) return 8
         if (it.toIntOrNull() != null) {
             someAttempts.add(it.toIntOrNull()!!)
         } else someSymbols.add(it)
     }
     someSymbols.forEachIndexed { index, s ->
-        if (System.currentTimeMillis() - time > 1000) return 8
         if (!allowedDigits.containsAll(s.toSet())) return -1
         else if (!s.contains('+')) onlyFailAttempts.add(someAttempts[index])
     }
