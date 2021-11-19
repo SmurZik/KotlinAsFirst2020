@@ -151,6 +151,7 @@ fun bestHighJump(jumps: String): Int {
             someAttempts.add(it.toIntOrNull()!!)
         } else someSymbols.add(it)
     }
+    if (!someSymbols.contains("+")) return -1
     someSymbols.forEachIndexed { index, s ->
         if (!allowedDigits.containsAll(s.toSet())) return -1
         else if (!s.contains('+')) onlyFailAttempts.add(someAttempts[index])
