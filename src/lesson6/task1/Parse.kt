@@ -160,7 +160,7 @@ fun bestHighJump(jumps: String): Int {
         return someAttempts.maxByOrNull { it } ?: -1
     } catch (e: TimeoutException) {
         println(jumps)
-        return (0)
+        return (-1)
     }
 }
 
