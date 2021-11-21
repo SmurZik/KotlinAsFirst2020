@@ -139,13 +139,7 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    val text = File(inputName).bufferedReader().readLines().map { it.trim() }
-    val maxLength = text.maxOfOrNull { it.length } ?: 0
-    File(outputName).bufferedWriter().use {
-        text.forEach { s ->
-            it.appendLine(" ".repeat((maxLength - s.length) / 2) + s)
-        }
-    }
+    TODO()
 }
 
 /**
@@ -176,30 +170,7 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    val text = File(inputName).bufferedReader().readLines().map { it.trim() }
-    text.forEach { it.replace(Regex("\\s+"), " ") }
-    val maxLength = text.maxOfOrNull { it.length } ?: 0
-    File(outputName).bufferedWriter().use {
-        text.forEach { str ->
-            var spaceCounter = maxLength.toDouble() - str.length.toDouble()
-            var k = 1
-            str.forEach { char ->
-                if (char == ' ') k += 1
-            }
-            if (str.length != maxLength) {
-                val stringWithSpaces = StringBuilder()
-                str.forEach { char ->
-                    if (char == ' ') {
-                        val numberOfSpaces = ceil((spaceCounter / (k - 1))).toInt()
-                        stringWithSpaces.append(" ".repeat(numberOfSpaces + 1))
-                        spaceCounter -= numberOfSpaces
-                        k -= 1
-                    } else stringWithSpaces.append(char)
-                }
-                it.appendLine(stringWithSpaces)
-            } else it.appendLine(str)
-        }
-    }
+    TODO()
 }
 
 /**
