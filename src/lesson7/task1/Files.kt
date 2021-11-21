@@ -172,7 +172,7 @@ fun centerFile(inputName: String, outputName: String) {
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
     val text = File(inputName).bufferedReader().readLines().map { it.trim() }
-    text.forEach { it.replace(Regex("\\s+"), " ") }
+    text.forEach { it.replace(Regex(" "), " ") }
     val maxLength = text.maxOfOrNull { it.length } ?: 0
     File(outputName).bufferedWriter().use {
         text.forEach { str ->
@@ -197,7 +197,28 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         }
     }
 }
-
+/*fun main() {
+    var k = 1
+    val string = StringBuilder()
+    val supe = "БВБ / бвБ БВБ; бвБ --- бвб - бвБ"
+    val note = "БВБ бвБ БВБ бвБ"
+    note.forEach { if (it == ' ') k += 1 }
+    var spaceCounter = supe.length - note.length
+    println(spaceCounter)
+    note.forEach {
+        if (it == ' ') {
+            var numberOfSpaces = (spaceCounter / (k - 1)).toInt()
+            if (((spaceCounter) % (k - 1) > 0)) numberOfSpaces += 1
+            println(numberOfSpaces)
+            string.append(" ".repeat(numberOfSpaces + 1))
+            spaceCounter -= numberOfSpaces
+            println(spaceCounter)
+            k -= 1
+        } else string.append(it)
+    }
+    println(string)
+    println(supe)
+}*/
 /**
  * Средняя (14 баллов)
  *
