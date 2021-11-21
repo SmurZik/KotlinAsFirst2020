@@ -186,7 +186,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 str.forEach { char ->
                     if (char == ' ') {
                         var numberOfSpaces = (spaceCounter / (k - 1)).toInt()
-                        if ((spaceCounter) % (k - 1) > 0) numberOfSpaces += 1
+                        if ((spaceCounter).toInt() % (k - 1) > 0) numberOfSpaces += 1
                         stringWithSpaces.append(" ".repeat(numberOfSpaces + 1))
                         spaceCounter -= numberOfSpaces
                         k -= 1
