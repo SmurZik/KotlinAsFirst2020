@@ -134,7 +134,7 @@ Basic, Ruby, Swift.
     @Test
     @Tag("20")
     fun alignFileByWidth() {
-        alignFileByWidth("input/width_in1.txt", "temp.txt")
+        /*alignFileByWidth("input/width_in1.txt", "temp.txt")
         assertFileContent(
             "temp.txt",
             """Простая
@@ -155,6 +155,12 @@ Basic, Ruby, Swift.
 1)  Число  пробелов  между  каждыми  двумя  парами  соседних  слов  не  должно  отличаться  более,  чем  на 1.
 2)  Число  пробелов  между  более  левой  парой  соседних  слов  должно  быть  больше или равно числу пробелов
 между                более               правой               парой               соседних               слов."""
+        )*/
+        File("temp.txt").delete()
+        alignFileByWidth("input/proba.txt", "temp.txt")
+        assertFileContent(
+            "temp.txt",
+            """ыа,          ИБ\nЫА    иб,    иб\nыа; ыа -- ыа ыа\nИБ   /  иб;  иб"""
         )
         File("temp.txt").delete()
 
