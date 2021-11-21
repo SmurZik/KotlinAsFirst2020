@@ -172,7 +172,7 @@ fun centerFile(inputName: String, outputName: String) {
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
     val text = File(inputName).bufferedReader().readLines().map { it.trim() }
-    text.forEach { it.replace(Regex(" "), " ") }
+    text.forEach { it.replace(Regex(" +"), " ") }
     val maxLength = text.maxOfOrNull { it.length } ?: 0
     File(outputName).bufferedWriter().use {
         text.forEach { str ->
