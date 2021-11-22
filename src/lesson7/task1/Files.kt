@@ -176,7 +176,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         text.forEach { str ->
             val x = str.replace(" +".toRegex(), " ")
-            var spaceCounter = maxLength.toDouble() - str.length.toDouble()
+            var spaceCounter = maxLength.toDouble() - x.length.toDouble()
             var k = 1
             x.forEach { char ->
                 if (char == ' ') k += 1
