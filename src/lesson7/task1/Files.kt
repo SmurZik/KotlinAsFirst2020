@@ -311,6 +311,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body><p>")
+    val check = mutableListOf<String>()
     val lines = File(inputName).bufferedReader().readLines()
     lines.forEach { s ->
         var str = s
@@ -328,7 +329,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
         var k = 0
         str.forEach { if (it == '*') k++ }
-        if (k % 2 != 0) str = str.replace("***", "<b><i>")
+        str = str.replace("***", "<b><i>")
         Regex("\\*(.*?)\\*").findAll(s, 0).forEach { _ -> i++ }
         if (i != 0) {
             for (j in 1..(i * 2)) {
