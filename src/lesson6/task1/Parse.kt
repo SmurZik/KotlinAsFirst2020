@@ -140,7 +140,6 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val allowedDigits = setOf('%', '-', '+')
     val parts = jumps.split(" ")
     val someAttempts = mutableListOf<Int>()
     val onlyFailAttempts = mutableListOf<Int>()
