@@ -88,6 +88,7 @@ fun dateStrToDigit(str: String): String = TODO()
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String = TODO()
+
 /**
  * Средняя (4 балла)
  *
@@ -145,15 +146,14 @@ fun bestHighJump(jumps: String): Int {
     val onlyFailAttempts = mutableListOf<Int>()
     val someSymbols = mutableListOf<String>()
     val jump = parts.toMutableList()
-    if (!(Regex("(\\d+ .*[+|%|-])").matches(jumps))) return -1
+    if (!Regex("(^(\\d+ [[+|-]|%]+)( \\d+ [[+|-]|%]+)+)|\\d+ [[+|-]|%]+").matches(jumps)) return -1
     jump.forEach {
         if (it.toIntOrNull() != null) {
             someAttempts.add(it.toIntOrNull()!!)
         } else someSymbols.add(it)
     }
     someSymbols.forEachIndexed { index, s ->
-        if (!allowedDigits.containsAll(s.toSet())) return -1
-        else if (!s.contains('+')) onlyFailAttempts.add(someAttempts[index])
+        if (!s.contains('+')) onlyFailAttempts.add(someAttempts[index])
     }
     someAttempts.removeAll(onlyFailAttempts)
     return someAttempts.maxByOrNull { it } ?: -1

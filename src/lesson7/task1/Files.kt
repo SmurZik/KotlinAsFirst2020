@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import java.util.*
 import kotlin.math.ceil
 import kotlin.math.round
 
@@ -83,25 +84,25 @@ fun deleteMarked(inputName: String, outputName: String) {
  *
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
-    val reader = File(inputName).bufferedReader()
-    val text = reader.readText().lowercase()
-    val result = mutableMapOf<String, Int>()
-    substrings.forEach { str ->
-        var i = 0
-        var count = 0
-        while (i < text.length) {
-            val progressInText = text.indexOf(str.lowercase(), i)
-            if (progressInText != -1) {
-                count++
-                i = progressInText + 1
-            } else {
-                break
+    File(inputName).bufferedReader().use {
+        val text = it.readText().lowercase()
+        val result = mutableMapOf<String, Int>()
+        substrings.forEach { str ->
+            var i = 0
+            var count = 0
+            while (i < text.length) {
+                val progressInText = text.indexOf(str.lowercase(), i)
+                if (progressInText != -1) {
+                    count++
+                    i = progressInText + 1
+                } else {
+                    break
+                }
             }
+            result += Pair(str, count)
         }
-        result += Pair(str, count)
+        return result
     }
-    reader.close()
-    return result
 }
 
 
