@@ -310,45 +310,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val result = StringBuilder().append("<html><body><p>")
-    val check = mutableListOf<String>()
-    val lines = File(inputName).bufferedReader().readLines()
-    lines.forEach { s ->
-        var str = s
-        var i = 0
-        if (str.isEmpty()) {
-            str = "</p><p>"
-        }
-        str = str.replace("\n", "")
-        Regex("\\*\\*(.*?)\\*\\*").findAll(s, 0).forEach { _ -> i++ }
-        if (i != 0) {
-            for (j in 1..(i * 2)) {
-                str = if (j % 2 != 0) str.replaceFirst("**", ("<b>"))
-                else str.replaceFirst("**", ("</b>"))
-            }
-        }
-        var k = 0
-        str.forEach { if (it == '*') k++ }
-        str = str.replace("***", "<b><i>")
-        Regex("\\*(.*?)\\*").findAll(s, 0).forEach { _ -> i++ }
-        if (i != 0) {
-            for (j in 1..(i * 2)) {
-                str = if (j % 2 != 0) str.replaceFirst("*", ("<i>"))
-                else str.replaceFirst("*", ("</i>"))
-            }
-        }
-        Regex("~~(.*?)~~").findAll(s, 0).forEach { _ -> i++ }
-        if (i != 0) {
-            for (j in 1..(i * 2)) {
-                str = if (j % 2 != 0) str.replaceFirst("~~", ("<s>"))
-                else str.replaceFirst("~~", ("</s>"))
-            }
-        }
-        result.append(str)
-    }
-    File(outputName).bufferedWriter().use {
-        it.write(result.append("</p></body></html>").toString())
-    }
+    TODO()
 }
 
 /**
