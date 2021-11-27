@@ -318,29 +318,42 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (str.isEmpty()) {
             str = "</p><p>"
         }
-        str = str.replace(Regex("[\\s\\n\\t]"), "")
-        Regex("\\*\\*(.*)\\*\\*").findAll(s, 0).forEach { _ -> i++ }
-        if (i != 0) {
-            for (j in 1..(i * 2) + 1) {
-                str = if (j % 2 != 0) str.replaceFirst("**", ("<b>"))
-                else str.replaceFirst("**", ("</b>"))
+        var italicIndex = str.indexOf("*")
+        var boldIndex = str.indexOf("**")
+        var strikeIndex = str.indexOf("~~")
+        var index = 0
+        val open = mutableListOf<String>()
+        while (italicIndex != -1 || strikeIndex != -1) {
+            italicIndex = str.indexOf("*")
+            boldIndex = str.indexOf("**")
+            strikeIndex = str.indexOf("~~")
+            if (boldIndex != -1) {
+                if ("**" !in open) {
+                    str = str.replaceFirst("**", "<b>")
+                    open.add("**")
+                } else {
+                    str = str.replaceFirst("**", "</b>")
+                    open.remove("**")
+                }
             }
-        }
-        var k = 0
-        str.forEach { if (it == '*') k++ }
-        str = str.replace("***", "<b><i>")
-        Regex("\\*(.*?)\\*").findAll(s, 0).forEach { _ -> i++ }
-        if (i != 0) {
-            for (j in 1..(i * 2)) {
-                str = if (j % 2 != 0) str.replaceFirst("*", ("<i>"))
-                else str.replaceFirst("*", ("</i>"))
+            if (italicIndex != -1) {
+                index = italicIndex
+                if ("*" !in open) {
+                    str = str.replaceFirst("*", "<i>")
+                    open.add("*")
+                } else {
+                    str = str.replaceFirst("*", "</i>")
+                    open.remove("*")
+                }
             }
-        }
-        Regex("~~(.*?)~~").findAll(s, 0).forEach { _ -> i++ }
-        if (i != 0) {
-            for (j in 1..(i * 2)) {
-                str = if (j % 2 != 0) str.replaceFirst("~~", ("<s>"))
-                else str.replaceFirst("~~", ("</s>"))
+            if (strikeIndex != -1) {
+                if ("~~" !in open) {
+                    str = str.replaceFirst("~~", "<s>")
+                    open.add("~~")
+                } else {
+                    str = str.replaceFirst("~~", "</s>")
+                    open.remove("~~")
+                }
             }
         }
         result.append(str)
