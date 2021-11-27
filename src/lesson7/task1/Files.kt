@@ -319,9 +319,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             str = "</p><p>"
         }
         str = str.replace(Regex("[\\s\\n\\t]"), "")
-        Regex("\\*\\*(.*?)\\*\\*").findAll(s, 0).forEach { _ -> i++ }
+        Regex("\\*\\*(.*)\\*\\*").findAll(s, 0).forEach { _ -> i++ }
         if (i != 0) {
-            for (j in 1..(i * 2)) {
+            for (j in 1..(i * 2) + 1) {
                 str = if (j % 2 != 0) str.replaceFirst("**", ("<b>"))
                 else str.replaceFirst("**", ("</b>"))
             }
