@@ -314,7 +314,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val lines = File(inputName).bufferedReader().readLines()
     lines.forEach { s ->
         var str = s
-        var i = 0
         if (str.isEmpty()) {
             str = "</p><p>"
         }
