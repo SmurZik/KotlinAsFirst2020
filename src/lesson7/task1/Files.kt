@@ -317,7 +317,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var empty = false
     lines.forEach { s ->
         var str = s
-        if (str.isEmpty()) {
+        if (str.trim().isEmpty()) {
             empty = true
         } else if (empty && start) result.append("</p><p>")
         empty = false
