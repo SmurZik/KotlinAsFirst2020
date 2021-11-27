@@ -312,6 +312,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body><p>")
     val lines = File(inputName).bufferedReader().readLines()
+    val open = mutableListOf<String>()
     lines.forEach { s ->
         var str = s
         if (str.isEmpty()) {
@@ -321,7 +322,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         var boldIndex = str.indexOf("**")
         var strikeIndex = str.indexOf("~~")
         var index = 0
-        val open = mutableListOf<String>()
         while (italicIndex != -1 || strikeIndex != -1) {
             italicIndex = str.indexOf("*")
             boldIndex = str.indexOf("**")
