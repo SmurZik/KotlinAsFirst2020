@@ -313,21 +313,23 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val result = StringBuilder().append("<html><body><p>")
     val lines = File(inputName).bufferedReader().readLines()
     val open = mutableListOf<String>()
+    var start = false
+    var empty = false
     lines.forEach { s ->
         var str = s
         if (str.isEmpty()) {
-            result.append("</p><p>")
-        }
+            empty = true
+        } else if (empty && start) result.append("</p><p>")
+        empty = false
+        start = true
         var italicIndex = str.indexOf("*")
         var boldIndex = str.indexOf("**")
         var strikeIndex = str.indexOf("~~")
-        var index = 0
         while (italicIndex != -1 || strikeIndex != -1) {
             italicIndex = str.indexOf("*")
             boldIndex = str.indexOf("**")
             strikeIndex = str.indexOf("~~")
             if (italicIndex != -1 && italicIndex != str.indexOf("**")) {
-                index = italicIndex
                 if ("*" !in open) {
                     str = str.replaceFirst("*", "<i>")
                     open.add("*")
@@ -345,7 +347,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     open.remove("**")
                 }
             }
-
             if (strikeIndex != -1) {
                 if ("~~" !in open) {
                     str = str.replaceFirst("~~", "<s>")
