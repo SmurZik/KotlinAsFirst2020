@@ -315,7 +315,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     lines.forEach { s ->
         var str = s
         if (str.isEmpty()) {
-            str = "</p><p>"
+            result.append("</p><p>")
         }
         var italicIndex = str.indexOf("*")
         var boldIndex = str.indexOf("**")
