@@ -327,16 +327,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             italicIndex = str.indexOf("*")
             boldIndex = str.indexOf("**")
             strikeIndex = str.indexOf("~~")
-            if (boldIndex != -1) {
-                if ("**" !in open) {
-                    str = str.replaceFirst("**", "<b>")
-                    open.add("**")
-                } else {
-                    str = str.replaceFirst("**", "</b>")
-                    open.remove("**")
-                }
-            }
-            if (italicIndex != -1) {
+            if (italicIndex != -1 && str[italicIndex + 1] != '*') {
                 index = italicIndex
                 if ("*" !in open) {
                     str = str.replaceFirst("*", "<i>")
@@ -346,6 +337,16 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     open.remove("*")
                 }
             }
+            if (boldIndex != -1) {
+                if ("**" !in open) {
+                    str = str.replaceFirst("**", "<b>")
+                    open.add("**")
+                } else {
+                    str = str.replaceFirst("**", "</b>")
+                    open.remove("**")
+                }
+            }
+
             if (strikeIndex != -1) {
                 if ("~~" !in open) {
                     str = str.replaceFirst("~~", "<s>")
