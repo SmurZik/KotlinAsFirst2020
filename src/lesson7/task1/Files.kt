@@ -141,7 +141,13 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).bufferedReader().readLines().map { it.trim() }
+    val maxLength = text.maxOfOrNull { it.length } ?: 0
+    File(outputName).bufferedWriter().use {
+        text.forEach { s ->
+            it.appendLine(" ".repeat((maxLength - s.length) / 2) + s)
+        }
+    }
 }
 
 /**
@@ -172,7 +178,31 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).bufferedReader().readLines().map { it.trim() }
+    val maxLength = text.maxOfOrNull { it.length } ?: 0
+    File(outputName).bufferedWriter().use {
+        text.forEach { str ->
+            val x = str.replace(" +".toRegex(), " ")
+            var spaceCounter = maxLength.toDouble() - x.length.toDouble()
+            var k = 1
+            x.forEach { char ->
+                if (char == ' ') k += 1
+            }
+            if (x.length != maxLength) {
+                val stringWithSpaces = StringBuilder()
+                x.forEach { char ->
+                    if (char == ' ') {
+                        var numberOfSpaces = (spaceCounter / (k - 1)).toInt()
+                        if ((spaceCounter).toInt() % (k - 1) > 0) numberOfSpaces += 1
+                        stringWithSpaces.append(" ".repeat(numberOfSpaces + 1))
+                        spaceCounter -= numberOfSpaces
+                        k -= 1
+                    } else stringWithSpaces.append(char)
+                }
+                it.appendLine(stringWithSpaces)
+            } else it.appendLine(x)
+        }
+    }
 }
 
 /**
@@ -310,7 +340,60 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val result = StringBuilder().append("<html><body><p>")
+    val lines = File(inputName).bufferedReader().readLines()
+    val open = mutableListOf<String>()
+    var start = false
+    var empty = false
+    lines.forEach { s ->
+        var str = s
+        if (str.trim().isEmpty()) {
+            empty = true
+        } else {
+            if (empty && start) result.append("</p><p>")
+            empty = false
+            start = true
+            var italicIndex = str.indexOf("*")
+            var boldIndex = str.indexOf("**")
+            var strikeIndex = str.indexOf("~~")
+            while (italicIndex != -1 || strikeIndex != -1) {
+                italicIndex = str.indexOf("*")
+                boldIndex = str.indexOf("**")
+                strikeIndex = str.indexOf("~~")
+                if (italicIndex != -1 && italicIndex != str.indexOf("**")) {
+                    if ("*" !in open) {
+                        str = str.replaceFirst("*", "<i>")
+                        open.add("*")
+                    } else {
+                        str = str.replaceFirst("*", "</i>")
+                        open.remove("*")
+                    }
+                }
+                if (boldIndex != -1) {
+                    if ("**" !in open) {
+                        str = str.replaceFirst("**", "<b>")
+                        open.add("**")
+                    } else {
+                        str = str.replaceFirst("**", "</b>")
+                        open.remove("**")
+                    }
+                }
+                if (strikeIndex != -1) {
+                    if ("~~" !in open) {
+                        str = str.replaceFirst("~~", "<s>")
+                        open.add("~~")
+                    } else {
+                        str = str.replaceFirst("~~", "</s>")
+                        open.remove("~~")
+                    }
+                }
+            }
+            result.append(str)
+        }
+    }
+    File(outputName).bufferedWriter().use {
+        it.write(result.append("</p></body></html>").toString())
+    }
 }
 
 /**
