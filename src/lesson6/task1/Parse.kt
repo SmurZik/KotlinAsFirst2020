@@ -2,6 +2,7 @@
 
 package lesson6.task1
 
+import kotlinx.html.InputType
 import lesson2.task2.daysInMonth
 
 // Урок 6: разбор строк, исключения
@@ -98,13 +99,18 @@ fun dateStrToDigit(str: String): String {
 
     val parts = str.split(" ")
     val day = parts[0].toInt()
-    val month = months.indexOf(parts[1]) + 1
     val year = parts[2].toInt()
-    if ((parts[1] !in months) || (daysInMonth(month, year) < day)) return ""
+    val month: String
 
-    return String.format("%02d.%02d.%d", day, month, year)
+    if (months.indexOf(parts[1]) != -1) {
+        month = (months.indexOf(parts[1]) + 1).toString()
+    } else return ""
+    val monthInInt = month.toInt()
+
+    return if (daysInMonth(monthInInt, year) >= day) {
+        String.format("%02d.%02d.%d", day, monthInInt, year)
+    } else ""
 }
-
 /**
  * Средняя (4 балла)
  *
