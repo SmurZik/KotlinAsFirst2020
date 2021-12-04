@@ -180,9 +180,10 @@ fun centerFile(inputName: String, outputName: String) {
 fun alignFileByWidth(inputName: String, outputName: String) {
     val text = File(inputName).bufferedReader().readLines().map { it.trim() }
     val maxLength = text.maxOfOrNull { it.length } ?: 0
+    val regex = " +".toRegex()
     File(outputName).bufferedWriter().use {
         text.forEach { str ->
-            val x = str.replace(" +".toRegex(), " ")
+            val x = str.replace(regex, " ")
             var spaceCounter = maxLength.toDouble() - x.length.toDouble()
             var k = 1
             x.forEach { char ->
