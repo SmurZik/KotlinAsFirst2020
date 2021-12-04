@@ -77,22 +77,22 @@ fun main() {
  * входными данными.
  */
 
-fun dateStrToDigit(str: String): String {
+val months = listOf(
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря"
+)
 
-    val months = listOf(
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
+fun dateStrToDigit(str: String): String {
 
     if (!str.matches(Regex("\\d+ ([а-я])+ \\d+"))) return ""
 
@@ -100,10 +100,9 @@ fun dateStrToDigit(str: String): String {
     val day = parts[0].toInt()
     val month = months.indexOf(parts[1]) + 1
     val year = parts[2].toInt()
+    if ((parts[1] !in months) || (daysInMonth(month, year) < day)) return ""
 
-    if ((parts[1] in months) && (daysInMonth(month, year) >= day))
-        return String.format("%02d.%02d.%d", day, month, year)
-    return ""
+    return String.format("%02d.%02d.%d", day, month, year)
 }
 
 /**
@@ -117,21 +116,6 @@ fun dateStrToDigit(str: String): String {
  * входными данными.
  */
 fun dateDigitToStr(digital: String): String {
-
-    val months = listOf(
-        "января",
-        "февраля",
-        "марта",
-        "апреля",
-        "мая",
-        "июня",
-        "июля",
-        "августа",
-        "сентября",
-        "октября",
-        "ноября",
-        "декабря"
-    )
 
     if (!digital.matches(Regex("\\d+\\.\\d+\\.\\d+"))) return ""
 
