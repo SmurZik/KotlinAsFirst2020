@@ -3,9 +3,6 @@
 package lesson7.task1
 
 import java.io.File
-import java.util.*
-import kotlin.math.ceil
-import kotlin.math.round
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -340,8 +337,20 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+fun getStr(string: String, open: MutableList<String>, str: String, newValue: String, newValue1: String): String {
+    var s = str
+    if (string !in open) {
+        s = s.replaceFirst(string, newValue)
+        open.add(string)
+    } else {
+        s = s.replaceFirst(string, newValue1)
+        open.remove(string)
+    }
+    return s
+}
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val result = StringBuilder().append("<html><body><p>")
+    val result = StringBuilder()
     val lines = File(inputName).bufferedReader().readLines()
     val open = mutableListOf<String>()
     var start = false
@@ -354,45 +363,25 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             if (empty && start) result.append("</p><p>")
             empty = false
             start = true
-            var italicIndex = str.indexOf("*")
-            var boldIndex = str.indexOf("**")
-            var strikeIndex = str.indexOf("~~")
-            while (italicIndex != -1 || strikeIndex != -1) {
-                italicIndex = str.indexOf("*")
-                boldIndex = str.indexOf("**")
-                strikeIndex = str.indexOf("~~")
-                if (italicIndex != -1 && italicIndex != str.indexOf("**")) {
-                    if ("*" !in open) {
-                        str = str.replaceFirst("*", "<i>")
-                        open.add("*")
-                    } else {
-                        str = str.replaceFirst("*", "</i>")
-                        open.remove("*")
-                    }
+            while (str.indexOf("*") != -1 || str.indexOf("~~") != -1) {
+                val italicIndex = str.indexOf("*")
+                val boldIndex = str.indexOf("**")
+                val strikeIndex = str.indexOf("~~")
+                if (italicIndex != -1 && italicIndex != boldIndex) {
+                    str = getStr("*", open, str, "<i>", "</i>")
                 }
                 if (boldIndex != -1) {
-                    if ("**" !in open) {
-                        str = str.replaceFirst("**", "<b>")
-                        open.add("**")
-                    } else {
-                        str = str.replaceFirst("**", "</b>")
-                        open.remove("**")
-                    }
+                    str = getStr("**", open, str, "<b>", "</b>")
                 }
                 if (strikeIndex != -1) {
-                    if ("~~" !in open) {
-                        str = str.replaceFirst("~~", "<s>")
-                        open.add("~~")
-                    } else {
-                        str = str.replaceFirst("~~", "</s>")
-                        open.remove("~~")
-                    }
+                    str = getStr("~~", open, str, "<s>", "</s>")
                 }
             }
             result.append(str)
         }
     }
     File(outputName).bufferedWriter().use {
+        it.write("<html><body><p>")
         it.write(result.append("</p></body></html>").toString())
     }
 }
