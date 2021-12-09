@@ -350,39 +350,38 @@ fun getStr(string: String, open: MutableList<String>, str: String, newValue: Str
 }
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val result = StringBuilder()
     val lines = File(inputName).bufferedReader().readLines()
     val open = mutableListOf<String>()
     var start = false
     var empty = false
-    lines.forEach { s ->
-        var str = s
-        if (str.trim().isEmpty()) {
-            empty = true
-        } else {
-            if (empty && start) result.append("</p><p>")
-            empty = false
-            start = true
-            while (str.indexOf("*") != -1 || str.indexOf("~~") != -1) {
-                val italicIndex = str.indexOf("*")
-                val boldIndex = str.indexOf("**")
-                val strikeIndex = str.indexOf("~~")
-                if (italicIndex != -1 && italicIndex != boldIndex) {
-                    str = getStr("*", open, str, "<i>", "</i>")
-                }
-                if (boldIndex != -1) {
-                    str = getStr("**", open, str, "<b>", "</b>")
-                }
-                if (strikeIndex != -1) {
-                    str = getStr("~~", open, str, "<s>", "</s>")
-                }
-            }
-            result.append(str)
-        }
-    }
     File(outputName).bufferedWriter().use {
         it.write("<html><body><p>")
-        it.write(result.append("</p></body></html>").toString())
+        lines.forEach { s ->
+            var str = s
+            if (str.trim().isEmpty()) {
+                empty = true
+            } else {
+                if (empty && start) it.write("</p><p>")
+                empty = false
+                start = true
+                while (str.indexOf("*") != -1 || str.indexOf("~~") != -1) {
+                    val italicIndex = str.indexOf("*")
+                    val boldIndex = str.indexOf("**")
+                    val strikeIndex = str.indexOf("~~")
+                    if (italicIndex != -1 && italicIndex != boldIndex) {
+                        str = getStr("*", open, str, "<i>", "</i>")
+                    }
+                    if (boldIndex != -1) {
+                        str = getStr("**", open, str, "<b>", "</b>")
+                    }
+                    if (strikeIndex != -1) {
+                        str = getStr("~~", open, str, "<s>", "</s>")
+                    }
+                }
+                it.appendLine(str)
+            }
+        }
+        it.write("</p></body></html>")
     }
 }
 
