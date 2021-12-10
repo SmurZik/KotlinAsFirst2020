@@ -126,7 +126,7 @@ fun centerFile(inputName: String, outputName: String) {
 
     val file = File(inputName).readLines()
     val text = file.map { it.trim() }; println(text)
-    val lengthMaxLine = text.maxOf { it.length }; println(lengthMaxLine)
+    val lengthMaxLine = text.maxOfOrNull { it.length } ?: 0; println(lengthMaxLine)
     val writer = File(outputName).bufferedWriter()
 
     for (line in text) {
