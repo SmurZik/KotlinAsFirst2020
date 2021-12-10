@@ -4,6 +4,7 @@ package lesson6.task1
 
 import kotlinx.html.InputType
 import lesson2.task2.daysInMonth
+import lesson4.task1.abs
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -203,7 +204,25 @@ fun bestHighJump(jumps: String): Int {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+
+    if (!expression.matches(Regex("""(\d* [+-]* \d+)+|\d+"""))) throw IllegalArgumentException()
+
+    val parts = expression.split(" ")
+    var result = parts[0].toInt()
+
+
+    for (i in 1..parts.size - 1 step 2) {
+        if (i + 1 < parts.size) {
+            val digit = parts[i + 1]
+            val sign = parts[i]
+            if (sign == "+") {
+                result += digit.toInt()
+            } else result -= digit.toInt()
+        } else result += parts[i].toInt(); println(result)
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
