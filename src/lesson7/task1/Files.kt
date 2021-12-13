@@ -165,8 +165,43 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+
+    val file = File(inputName).readLines()
+    val writer = File(outputName).bufferedWriter()
+
+    val textLine = file.map { it.trim() }
+    val wordInTextLine = textLine.map { it.split(Regex("\\s+")) }
+    val lengthMaxLine = textLine.maxOfOrNull { it.length } ?: 0
+
+    writer.use {
+        for (line in wordInTextLine) {
+            if (line.isEmpty()) writer.newLine()
+            else if (line.size == 1) writer.appendLine(line[0])
+
+            else {
+                if (line.size != lengthMaxLine) {
+
+                    val countSpacesBeetwenWords = line.size - 1
+                    val lengthLine = line.sumOf { it.length }
+                    val spaceCounter = lengthMaxLine - lengthLine
+                    val spaceNumberNeededDistribute = (spaceCounter) / (countSpacesBeetwenWords)
+                    val remainSpace = (spaceCounter) % (countSpacesBeetwenWords)
+
+                    val result = StringBuilder()
+
+                    for (i in 0 until countSpacesBeetwenWords) {
+                        if (i < remainSpace) {
+                            result.append(line[i]).append(" ".repeat(spaceNumberNeededDistribute + 1))
+                        } else result.append(line[i]).append(" ".repeat(spaceNumberNeededDistribute))
+                    }
+                    result.append(line[countSpacesBeetwenWords])
+                    writer.appendLine(result.toString())
+                }
+            }
+        }
+    }
 }
+
 
 /**
  * Средняя (14 баллов)
