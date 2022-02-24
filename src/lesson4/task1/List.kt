@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson3.task1.digitNumber
+import lesson3.task1.exponentiation
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -122,11 +123,11 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * Модуль пустого вектора считать равным 0.0.
  */
 fun abs(v: List<Double>): Double {
-    var sqrIndex = 0.0
+    var ab = 0.0
     for (i in 0 until v.size) {
-        sqrIndex += v[i] * v[i]
+        ab += v[i] * v[i]
     }
-    return sqrt(sqrIndex)
+    return sqrt(ab)
 }
 
 /**
@@ -134,11 +135,8 @@ fun abs(v: List<Double>): Double {
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double {
-    if (list.isNotEmpty())
-        return list.sum() / list.size
-    return 0.0
-}
+fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0
+else list.sum() / list.size
 
 /**
  * Средняя (3 балла)
@@ -150,11 +148,12 @@ fun mean(list: List<Double>): Double {
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
     val mean = mean(list)
-    for (i in 0 until list.size)
+    for (i in 0 until list.size) {
         list[i] -= mean
+    }
     return list
-
 }
+
 
 /**
  * Средняя (3 балла)
@@ -181,10 +180,8 @@ fun times(a: List<Int>, b: List<Int>): Int {
  */
 fun polynom(p: List<Int>, x: Int): Int {
     var s = 0
-    var pow = 1
     for (i in 0 until p.size) {
-        s += p[i] * pow
-        pow *= x
+        s += p[i] * exponentiation(i, x)
     }
     return s
 }
@@ -214,16 +211,17 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  * Множители в списке должны располагаться по возрастанию.
  */
 fun factorize(n: Int): List<Int> {
-    var numb = n
+    var n1 = n
     val result = mutableListOf<Int>()
-    var d = 2
-    while (numb > 1)
-        if (numb % d == 0) {
-            numb /= d
-            result += d
-        } else d++
+    var del = 2
+    while (del * del <= n1) {
+        if (n1 % del == 0) {
+            result.add(del)
+            n1 /= del
+        } else del++
+    }
+    if (n1 > 1) result.add(n1)
     return result
-
 }
 
 /**
@@ -243,14 +241,14 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-    var numb = n
-    val result = mutableListOf<Int>()
-    if (numb == 0) return listOf(0)
-    while (numb > 0) {
-        result.add(numb % base)
-        numb /= base
+    var n1 = n
+    val list = mutableListOf<Int>()
+    if (n1 == 0) return listOf(0)
+    while (n1 > 0) {
+        list.add(n1 % base)
+        n1 /= base
     }
-    return result.reversed()
+    return list.reversed()
 }
 
 /**
@@ -265,14 +263,12 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
-    val alphabets = ('a'..'z').toMutableList()
     var result = ""
-    val elem = convert(n, base)
-    for (i in elem.indices) {
-        val z = elem[i]
-        if (z in 0..9) {
-            result += z
-        } else result += alphabets[z - 10]
+    val letters = "abcdefghijklmnopqrstuvwxyz"
+    for (element in convert(n, base)) {
+        if (element < 10) {
+            result += element
+        } else result += letters[element - 10]
     }
     return result
 }
@@ -285,7 +281,13 @@ fun convertToString(n: Int, base: Int): String {
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var sum = digits[0]
+    for (i in 1 until digits.size) {
+        sum = sum * base + digits[i]
+    }
+    return sum
+}
 
 /**
  * Сложная (4 балла)
@@ -299,7 +301,22 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    var resultList = mutableListOf<Int>()
+    var number: Int
+    val letters = "abcdefghijklmnopqrstuvwxyz"
+    val listOfNumbers = mutableListOf<Int>()
+    for (i in 10..36) listOfNumbers.add(i)
+    for (i in 0 until str.length) {
+        if (str[i] in letters) {
+            number = listOfNumbers[letters.indexOf(str[i], 0)]
+            resultList.add(number)
+        } else {
+            resultList.add(str[i].toString().toInt())
+        }
+    }
+    return decimal(resultList, base)
+}
 
 /**
  * Сложная (5 баллов)
@@ -307,22 +324,21 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * Перевести натуральное число n > 0 в римскую систему.
  * Римские цифры: 1 = I, 4 = IV, 5 = V, 9 = IX, 10 = X, 40 = XL, 50 = L,
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
- * Например: 23 = XXIII, 44 = XLIV, 100 = C
+ * Например: 23 = XXIII, 44 = XLIV, 100 = Ca
  */
 fun roman(n: Int): String {
-    var numb = n
-    var dig = ""
-    val romanNumbers = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
-    val arabicNumbers = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
-    for (i in arabicNumbers.indices) {
-        while (numb >= arabicNumbers[i]) {
-            numb -= arabicNumbers[i]
-            dig += romanNumbers[i]
+    var n1 = n
+    val romanNumbers = listOf("I", "IV", "V", "IX", "X", "XL", "L", "XC", "C", "CD", "D", "CM", "M")
+    val arabianNumbers = listOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
+    var result = ""
+    for (i in arabianNumbers.size - 1 downTo 0) {
+        while (n1 >= arabianNumbers[i]) {
+            n1 -= arabianNumbers[i]
+            result += romanNumbers[i]
         }
     }
-    return dig
+    return result
 }
-
 /**
  * Очень сложная (7 баллов)
  *
@@ -330,4 +346,92 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+
+fun russian(n: Int): String {
+    var z = digitNumber(n)
+    var n1 = n
+    val result = mutableListOf<String>()
+    val russianUnits = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+    val russianFirstDoubleDigits =
+        listOf(
+            "десять",
+            "одиннадцать",
+            "двенадцать",
+            "тринадцать",
+            "четырнадцать",
+            "пятнадцать",
+            "шестнадцать",
+            "семнадцать",
+            "восемнадцать",
+            "девятнадцать"
+        )
+    val russianDozens =
+        listOf(
+            "десять",
+            "двадцать",
+            "тридцать",
+            "сорок",
+            "пятьдесят",
+            "шестьдесят",
+            "семьдесят",
+            "восемьдесят",
+            "девяносто"
+        )
+    val russianHundreds =
+        listOf("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    while (n1 > 0) {
+        if (z == 6) {
+            result += russianHundreds[(n1 / exponentiation(z - 1, 10)) - 1]
+            n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+            z = digitNumber(n1)
+            if (z < 4) result += "тысяч"
+        } else if (z == 5) {
+            if (n1 / 1000 > 19) {
+                result += russianDozens[(n1 / exponentiation(z - 1, 10)) - 1]
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+                if (z < 4) result += "тысяч"
+            } else {
+                result += russianFirstDoubleDigits[((n1 / 1000) % 10)]
+                n1 -= (n1 / exponentiation(z - 2, 10)) * exponentiation(z - 2, 10)
+                z = digitNumber(n1)
+                if (z < 4) result += "тысяч"
+            }
+        } else if (z == 4) {
+            if (n1 / 1000 == 1) {
+                result += "одна тысяча"
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+            } else if (n1 / 1000 == 2) {
+                result += "две тысячи"
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+            } else if (n1 / 1000 == 3 || n1 / 1000 == 4) {
+                result += russianUnits[n1 / 1000 - 1] + " тысячи"
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+            } else {
+                result += russianUnits[n1 / 1000 - 1] + " тысяч"
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+            }
+        } else if (z == 3) {
+            result += russianHundreds[(n1 / exponentiation(z - 1, 10)) - 1]
+            n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+            z = digitNumber(n1)
+        } else if (z == 2) {
+            if (n1 > 19) {
+                result += russianDozens[(n1 / exponentiation(z - 1, 10)) - 1]
+                n1 -= (n1 / exponentiation(z - 1, 10)) * exponentiation(z - 1, 10)
+                z = digitNumber(n1)
+            } else {
+                result += russianFirstDoubleDigits[(n1 % 10)]
+                n1 = 0
+            }
+        } else if (z == 1) {
+            result += russianUnits[n1 - 1]
+            n1 = 0
+        }
+    }
+    return result.joinToString(separator = " ")
+}

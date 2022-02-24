@@ -28,6 +28,7 @@ class Tests {
         assertTrue(queenThreatens(3, 6, 7, 6))
         assertTrue(queenThreatens(8, 1, 1, 8))
         assertFalse(queenThreatens(7, 6, 5, 7))
+        assertTrue(queenThreatens(3, 1, 2, 2))
     }
 
     @Test
@@ -45,6 +46,7 @@ class Tests {
         assertEquals(29, daysInMonth(2, 1996))
         assertEquals(28, daysInMonth(2, 1900))
         assertEquals(29, daysInMonth(2, 2000))
+        assertEquals(30, daysInMonth(9, 7070100))
     }
 
     @Test
@@ -64,5 +66,8 @@ class Tests {
         assertTrue(brickPasses(4, 4, 4, 4, 4))
         assertFalse(brickPasses(6, 5, 4, 3, 6))
         assertTrue(brickPasses(3, 2, 1, 1, 2))
+        assertFalse(brickPasses(1, 839, 1000, 2, 786))
+        assertTrue(brickPasses(1, 2, 1, 1, 1))
+        assertTrue(brickPasses(1, 1, 2, 1, 1))
     }
 }

@@ -4,6 +4,9 @@ package lesson3.task1
 
 import kotlin.math.abs
 import kotlin.math.sqrt
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.abs
 
 // Урок 3: циклы
 // Максимальное количество баллов = 9
@@ -74,13 +77,16 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun digitNumber(n: Int): Int {
-    var sum = 0
-    var num = n
-    do {
-        num /= 10
-        sum += 1
-    } while (num != 0)
-    return sum
+    var k = 0
+    var number = n
+    if (number == 0) return 1
+    else {
+        while (abs(number) > 0) {
+            k++
+            number /= 10
+        }
+    }
+    return k
 }
 
 /**
@@ -90,15 +96,15 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    var fibFirst = 1
-    var fibSecond = 1
-    var fibThird = 1
+    var fib1 = 1
+    var fib2 = 1
+    var fib3 = 1
     for (i in 3..n) {
-        fibThird = fibFirst + fibSecond
-        fibFirst = fibSecond
-        fibSecond = fibThird
+        fib3 = fib1 + fib2
+        fib1 = fib2
+        fib2 = fib3
     }
-    return fibThird
+    return fib3
 }
 
 /**
@@ -107,26 +113,22 @@ fun fib(n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (i in 2..(n / 2))
-        if (n % i == 0) {
-            return i
-        }
+    for (d in 2..(n / 2)) {
+        if (n % d == 0) return d
+    }
     return n
 }
-
 /**
  * Простая (2 балла)
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    val num = n - 1
-    for (i in num downTo 1)
-        if (n % i == 0) {
-            return i
-        }
-    return 2
-
+    var maxDel = 1
+    for (d in 1 until n) {
+        if (n % d == 0) maxDel = max(maxDel, d)
+    }
+    return maxDel
 }
 
 /**
@@ -146,17 +148,14 @@ fun maxDivisor(n: Int): Int {
  * этого для какого-либо начального X > 0.
  */
 fun collatzSteps(x: Int): Int {
-    var sum = 0
-    var num = x
-    while (num != 1) {
-        if (num % 2 == 0) {
-            num /= 2
-        } else {
-            num = 3 * num + 1
-        }
-        sum += 1
+    var number = x
+    var k = 0
+    while (number != 1) {
+        if (number % 2 == 0) number /= 2
+        else number = 3 * number + 1
+        k++
     }
-    return sum
+    return k
 }
 
 /**
@@ -166,15 +165,17 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var numFirst = m
-    var numSecond = n
-    while (numFirst != numSecond)
-        if (numFirst > numSecond)
-            numFirst -= numSecond
-        else numSecond -= numFirst
-    return n * m / numSecond
+    var ma = max(m, n)
+    var mi = min(m, n)
+    while (ma != mi) {
+        if (ma > mi) {
+            ma -= mi
+        } else if (ma < mi) {
+            mi -= ma
+        }
+    }
+    return m * n / ma
 }
-
 /**
  * Средняя (3 балла)
  *
@@ -183,15 +184,15 @@ fun lcm(m: Int, n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var numFirst = m
-    var numSecond = n
-    while (numFirst != 0 && numSecond != 0) {
-        if (numFirst > numSecond) numFirst %= numSecond
-        else numSecond %= numFirst
+    var flag = 0
+    for (i in 2..m) {
+        if ((m % i == 0) && (n % i == 0)) {
+            flag = 1
+            break
+        }
     }
-    return numFirst + numSecond == 1
+    return flag == 0
 }
-
 /**
  * Средняя (3 балла)
  *
@@ -200,14 +201,16 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun revert(n: Int): Int {
-    var reversionNumb = 0
-    var numb = n
-    while (numb >= 1) {
-        val dig = (numb % 10)
-        reversionNumb = reversionNumb * 10 + dig
-        numb /= 10
+    var previousNumber = 0
+    var tempNumber = 0
+    var number = n
+    while (number > 0) {
+        previousNumber *= 10
+        tempNumber = number % 10
+        previousNumber += tempNumber
+        number /= 10
     }
-    return reversionNumb
+    return previousNumber
 }
 
 /**
@@ -219,18 +222,35 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean {
-    var reversionNumb = 0
-    var numb = n
-    var dig: Int
-    while (numb > 0) {
-        dig = (numb % 10)
-        reversionNumb = reversionNumb * 10 + dig
-        numb /= 10
+fun digitNumbers(k: Int): Int {
+    var k1 = k
+    var numberOfDigits = 0
+    while (k1 > 0) {
+        numberOfDigits++
+        k1 /= 10
     }
-    return (n == reversionNumb)
+    return numberOfDigits
 }
 
+fun isPalindrome(n: Int): Boolean {
+    var number1 = n
+    var flag = true
+    var divider = 1
+    if (n < 10) return true
+    else {
+        for (i in 1 until digitNumbers(n)) divider *= 10
+        while (number1 > 0) {
+            if (number1 % 10 != number1 / divider) {
+                flag = false
+                break
+            }
+            number1 %= divider
+            number1 /= 10
+            divider /= 100
+        }
+        return flag
+    }
+}
 /**
  * Средняя (3 балла)
  *
@@ -239,7 +259,33 @@ fun isPalindrome(n: Int): Boolean {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var number: Int
+    var number1: Int
+    var divider = 1
+    var flag = false
+    if (n < 10) return false
+    else {
+        number = n
+        for (i in 1 until digitNumbers(n)) divider *= 10
+        while (number > 0) {
+            number1 = number
+            while (number1 > 0) {
+                if ((number1 % 10) != (number % 10)) flag = true
+                number1 /= 10
+            }
+            number /= 10
+        }
+        return flag
+    }
+}
+
+
+fun exponentiation(n: Int, x: Int): Int {
+    var x1 = 1.0
+    for (i in 1..n) x1 *= x
+    return x1.toInt()
+}
 
 /**
  * Средняя (4 балла)
@@ -250,7 +296,9 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
+
 fun sin(x: Double, eps: Double): Double = TODO()
+
 
 /**
  * Средняя (4 балла)
@@ -272,22 +320,42 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int {
-    var number = 0
-    var sequenceToNumberOrDigit = 0
-    var lengthToNumberOrDigit = 0
-    while (lengthToNumberOrDigit < n) {
-        number++
-        sequenceToNumberOrDigit = number * number
-        lengthToNumberOrDigit += digitNumber(sequenceToNumberOrDigit) // функция из задачи выше
+
+fun sequenceDigit(n: Int, f: Int): Int {
+    var count = 1
+    var number: Int = if (f == 0) n
+    else f
+    var x = 1
+    var x2: Int
+    while (true) {
+        if (f == 0) {
+            x = count * count
+        }
+        if (n == 0) {
+            x = fib(count)
+        }
+        x2 = x
+        var numberOfDigits = 0
+        while (x2 > 0) {
+            numberOfDigits++
+            x2 /= 10
+        }
+        if (number - numberOfDigits > 0) {
+            number -= numberOfDigits
+            count += 1
+        } else if (number - numberOfDigits == 0) {
+            var m = x % 10
+            count += 1
+            return m
+        } else {
+            count += 1
+            return (x / exponentiation(abs(number - numberOfDigits), 10)) % 10
+        }
     }
-    while (n < lengthToNumberOrDigit) {
-        lengthToNumberOrDigit--
-        sequenceToNumberOrDigit /= 10
-    }
-    return sequenceToNumberOrDigit % 10
 }
 
+
+fun squareSequenceDigit(n: Int): Int = sequenceDigit(n, 0)
 /**
  * Сложная (5 баллов)
  *
@@ -297,19 +365,4 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int {
-    var number = 0
-    var sequenceToNumberOrDigit = 0
-    var lengthToNumberOrDigit = 0
-    while (lengthToNumberOrDigit < n) {
-        number++
-        sequenceToNumberOrDigit = fib(number) // функция из задачи выше
-        lengthToNumberOrDigit += digitNumber(sequenceToNumberOrDigit)
-    }
-    while (n < lengthToNumberOrDigit) {
-        lengthToNumberOrDigit--
-        sequenceToNumberOrDigit /= 10
-    }
-    return sequenceToNumberOrDigit % 10
-}
-
+fun fibSequenceDigit(n: Int): Int = sequenceDigit(0, n)

@@ -2,9 +2,7 @@
 
 package lesson6.task1
 
-import kotlinx.html.InputType
-import lesson2.task2.daysInMonth
-import lesson4.task1.abs
+import java.util.concurrent.TimeoutException
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -65,7 +63,6 @@ fun main() {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
 }
-
 
 /**
  * Средняя (4 балла)
@@ -166,13 +163,16 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-
-    if (!jumps.matches(Regex("\\d+[ %-]* [ \\d%-]*"))) return -1
-
-    val parts = jumps.split(" ", "-", "%").filter { it != "" }
-    val max = parts.maxOrNull()?.toInt()
-
-    return max!!
+    val allowedDigits = setOf("%", "-")
+    val parts = jumps.split(Regex("\\s+"))
+    val onlySuccessAttempts = mutableListOf<Int>()
+    val jumpList = parts.toMutableList()
+    jumpList.forEach {
+        if (it.toIntOrNull() != null) {
+            onlySuccessAttempts.add(it.toIntOrNull()!!)
+        } else if (!allowedDigits.contains(it)) return -1
+    }
+    return onlySuccessAttempts.maxByOrNull { it } ?: -1
 }
 
 /**
@@ -187,12 +187,22 @@ fun bestLongJump(jumps: String): Int {
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches((Regex("""\d+ \+[ \+\-\%\d]*""")))) return -1
     val parts = jumps.split(" ")
-    var result = -1
-    for (i in 0..parts.size - 1 step 2)
-        if ('+' in parts[i + 1] && (parts[i].toInt() > result)) result = parts[i].toInt()
-    return result
+    val someAttempts = mutableListOf<Int>()
+    val onlyFailAttempts = mutableListOf<Int>()
+    val someSymbols = mutableListOf<String>()
+    val jump = parts.toMutableList()
+    if (!Regex("(^(\\d+ [[+|-]|%]+)( \\d+ [[+|-]|%]+)+)|\\d+ [[+|-]|%]+").matches(jumps)) return -1
+    jump.forEach {
+        if (it.toIntOrNull() != null) {
+            someAttempts.add(it.toIntOrNull()!!)
+        } else someSymbols.add(it)
+    }
+    someSymbols.forEachIndexed { index, s ->
+        if (!s.contains('+')) onlyFailAttempts.add(someAttempts[index])
+    }
+    someAttempts.removeAll(onlyFailAttempts)
+    return someAttempts.maxByOrNull { it } ?: -1
 }
 
 /**
@@ -233,7 +243,19 @@ fun plusMinus(expression: String): Int {
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    val parts = str.split(" ").map { it.lowercase() }
+    var startIndex = 0
+    var flag = true
+    for (i in 0 until parts.size - 1) {
+        if (parts[i] == parts[i + 1]) {
+            flag = false
+            break
+        } else startIndex += parts[i].length + 1
+    }
+    if (flag) return -1
+    return startIndex
+}
 
 /**
  * Сложная (6 баллов)

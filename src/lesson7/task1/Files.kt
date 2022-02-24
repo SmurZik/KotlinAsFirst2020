@@ -63,17 +63,12 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-
-    val file = File(inputName).readLines()
-    val writer = File(outputName).bufferedWriter()
-
-    for (line in file) {
-        if (line.isEmpty() || line[0] != '_') {
-            writer.write(line); println(line)
-            writer.newLine()
+    File(outputName).bufferedWriter().use {
+        File(inputName).forEachLine { string ->
+            if (!string.startsWith("_") || string.isEmpty())
+                it.appendLine(string)
         }
     }
-    writer.close()
 }
 
 /**
@@ -85,7 +80,27 @@ fun deleteMarked(inputName: String, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    File(inputName).bufferedReader().use {
+        val text = it.readText().lowercase()
+        val result = mutableMapOf<String, Int>()
+        substrings.forEach { str ->
+            var i = 0
+            var count = 0
+            while (i < text.length) {
+                val progressInText = text.indexOf(str.lowercase(), i)
+                if (progressInText != -1) {
+                    count++
+                    i = progressInText + 1
+                } else {
+                    break
+                }
+            }
+            result += Pair(str, count)
+        }
+        return result
+    }
+}
 
 
 /**
@@ -123,18 +138,13 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-
-    val file = File(inputName).readLines()
-    val text = file.map { it.trim() }; println(text)
-    val lengthMaxLine = text.maxOfOrNull { it.length } ?: 0; println(lengthMaxLine)
-    val writer = File(outputName).bufferedWriter()
-
-    for (line in text) {
-        for (i in 1..(lengthMaxLine - line.length) / 2) writer.write(" ")
-        writer.write(line); println(line)
-        writer.newLine()
+    val text = File(inputName).bufferedReader().readLines().map { it.trim() }
+    val maxLength = text.maxOfOrNull { it.length } ?: 0
+    File(outputName).bufferedWriter().use {
+        text.forEach { s ->
+            it.appendLine(" ".repeat((maxLength - s.length) / 2) + s)
+        }
     }
-    writer.close()
 }
 
 /**
@@ -165,39 +175,30 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-
-    val file = File(inputName).readLines()
-    val writer = File(outputName).bufferedWriter()
-
-    val textLine = file.map { it.trim() }
-    val wordInTextLine = textLine.map { it.split(Regex("\\s+")) }
-    val lengthMaxLine = textLine.maxOfOrNull { it.length } ?: 0
-
-    writer.use {
-        for (line in wordInTextLine) {
-            if (line.isEmpty()) writer.newLine()
-            else if (line.size == 1) writer.appendLine(line[0])
-
-            else {
-                if (line.size != lengthMaxLine) {
-
-                    val countSpacesBeetwenWords = line.size - 1
-                    val lengthLine = line.sumOf { it.length }
-                    val spaceCounter = lengthMaxLine - lengthLine
-                    val spaceNumberNeededDistribute = (spaceCounter) / (countSpacesBeetwenWords)
-                    val remainSpace = (spaceCounter) % (countSpacesBeetwenWords)
-
-                    val result = StringBuilder()
-
-                    for (i in 0 until countSpacesBeetwenWords) {
-                        if (i < remainSpace) {
-                            result.append(line[i]).append(" ".repeat(spaceNumberNeededDistribute + 1))
-                        } else result.append(line[i]).append(" ".repeat(spaceNumberNeededDistribute))
-                    }
-                    result.append(line[countSpacesBeetwenWords])
-                    writer.appendLine(result.toString())
-                }
+    val text = File(inputName).bufferedReader().readLines().map { it.trim() }
+    val maxLength = text.maxOfOrNull { it.length } ?: 0
+    val regex = " +".toRegex()
+    File(outputName).bufferedWriter().use {
+        text.forEach { str ->
+            val x = str.replace(regex, " ")
+            var spaceCounter = maxLength.toDouble() - x.length.toDouble()
+            var k = 1
+            x.forEach { char ->
+                if (char == ' ') k += 1
             }
+            if (x.length != maxLength) {
+                val stringWithSpaces = StringBuilder()
+                x.forEach { char ->
+                    if (char == ' ') {
+                        var numberOfSpaces = (spaceCounter / (k - 1)).toInt()
+                        if ((spaceCounter).toInt() % (k - 1) > 0) numberOfSpaces += 1
+                        stringWithSpaces.append(" ".repeat(numberOfSpaces + 1))
+                        spaceCounter -= numberOfSpaces
+                        k -= 1
+                    } else stringWithSpaces.append(char)
+                }
+                it.appendLine(stringWithSpaces)
+            } else it.appendLine(x)
         }
     }
 }
@@ -337,8 +338,52 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+fun getStr(string: String, open: MutableList<String>, str: String, newValue: String, newValue1: String): String {
+    var s = str
+    if (string !in open) {
+        s = s.replaceFirst(string, newValue)
+        open.add(string)
+    } else {
+        s = s.replaceFirst(string, newValue1)
+        open.remove(string)
+    }
+    return s
+}
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val lines = File(inputName).bufferedReader().readLines()
+    val open = mutableListOf<String>()
+    var start = false
+    var empty = false
+    File(outputName).bufferedWriter().use {
+        it.write("<html><body><p>")
+        lines.forEach { s ->
+            var str = s
+            if (str.trim().isEmpty()) {
+                empty = true
+            } else {
+                if (empty && start) it.write("</p><p>")
+                empty = false
+                start = true
+                while (str.indexOf("*") != -1 || str.indexOf("~~") != -1) {
+                    val italicIndex = str.indexOf("*")
+                    val boldIndex = str.indexOf("**")
+                    val strikeIndex = str.indexOf("~~")
+                    if (italicIndex != -1 && italicIndex != boldIndex) {
+                        str = getStr("*", open, str, "<i>", "</i>")
+                    }
+                    if (boldIndex != -1) {
+                        str = getStr("**", open, str, "<b>", "</b>")
+                    }
+                    if (strikeIndex != -1) {
+                        str = getStr("~~", open, str, "<s>", "</s>")
+                    }
+                }
+                it.appendLine(str)
+            }
+        }
+        it.write("</p></body></html>")
+    }
 }
 
 /**
